@@ -1,0 +1,28 @@
+add car passenger
+add station
+add station
+add station
+add station
+add station
+add connection Station-1 Station-2
+add connection Station-3 Station-2
+add connection Station-4 Station-3
+add connection Station-4 Station-5
+add locomotive Station-1
+add trainset locomotive-1
+add locomotive Station-1
+add trainset locomotive-2
+add locomotive Station-1
+add trainset locomotive-3
+add locomotive Station-1
+add trainset locomotive-4
+add locomotive Station-1
+add trainset locomotive-5
+add car-to-trainset locomotive-1 ukrzaliznytsia-1
+run-train locomotive-1 Station-5
+run-train locomotive-2 Station-2
+run-train locomotive-3 Station-4
+run-train locomotive-4 Station-5
+run-train locomotive-5 Station-3
+
+quit
