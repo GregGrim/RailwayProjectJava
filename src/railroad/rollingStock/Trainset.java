@@ -15,7 +15,8 @@ import static java.lang.Thread.sleep;
  * @see Locomotive
  *
  */
-public class Trainset implements Runnable{
+public class Trainset{
+
     private List<Car> cars ;
     private int maxCars;
     private double maxLoad;
@@ -95,22 +96,5 @@ public class Trainset implements Runnable{
         this.maxLoad = maxLoad;
     }
 
-
-    @Override
-    public void run() {
-        while(locomotive.isRunning()) {
-            locomotive.move();
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                locomotive.stop();
-            }
-        }
-    }
-    public void startTrain(Station destinationStation) {
-        locomotive.setEndStation(destinationStation);
-        locomotive.setDestinationStation(destinationStation);
-        locomotive.setRunning(true);
-        new Thread(this).start();
-    }
 }
+

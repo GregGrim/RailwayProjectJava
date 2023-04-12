@@ -199,16 +199,13 @@ public class RailroadWorld {
                     }
                     break;
                 case "run-train" : {
-                    Trainset train = trains.get(locomotives.get(scan.next()));
+                    Locomotive train = locomotives.get(scan.next());
                     train.startTrain(stations.get(scan.next()));
                     break;
                 }
                 case "log"  : {
                     new Logger(this, "AppState.txt");
                 }
-
-
-
             }
         } while(!"quit".equals(command));
 
