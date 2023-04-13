@@ -7,20 +7,24 @@ public class LiquidToxicMaterialsCar extends ToxicMaterialsCar implements Liquid
     private double volume;
     private int capacity;
     private Type liqType;
+    private String chemicalName;
     LiquidToxicMaterialsCar(String name, String securityInfo, boolean electricalGridNeed) {
         super(name == null?"LiquidToxicMaterialsCar":name, "liquids"+securityInfo, electricalGridNeed);
         capacity=1000;
         double x = Math.random();
         if(x<0.33) {
             liqType= Type.ACID;
+            chemicalName="Sulfuric Acid";
             calcVolume();
         }
         else if(x>0.66) {
             liqType= Type.MERCURY;
+            chemicalName="Mercury";
             calcVolume();
         }
         else {
             liqType= Type.ETHER;
+            chemicalName="diethyl ether";
             calcVolume();
         }
     }
@@ -52,6 +56,17 @@ public class LiquidToxicMaterialsCar extends ToxicMaterialsCar implements Liquid
     }
     @Override
     public int capLeft() {
-        return 0;
+        return capacity-loadWeight;
+    }
+
+    @Override
+    public void getSummary() {
+        System.out.println(getName());
+        System.out.println("carWeight= "+getCarWeight());
+        System.out.println("loadWeight= "+getLoadWeight()+"shipper:"+super.getShipper());
+        System.out.println("securityInfo: "+getSecurityInfo());
+        System.out.println("electricalGreedNeed"+(isElectricalGridNeed()?"Yes":"No"));
+        System.out.println("material Type: "+super.getMatType()+ "chemicalName= "+chemicalName);
+
     }
 }

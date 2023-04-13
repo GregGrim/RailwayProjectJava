@@ -24,6 +24,10 @@ public class ToxicMaterialsCar extends HeavyFreightCar{
         }
     }
 
+    public Type getMatType() {
+        return matType;
+    }
+
     @Override
     public void getSummary() {
         super.getSummary();

@@ -19,6 +19,11 @@ public class HeavyFreightCar extends Car{
         }
         else System.out.println("No more cargo left on "+getName());
     }
+
+    public String getShipper() {
+        return shipper;
+    }
+
     @Override
     public void getSummary() {
         System.out.println(getName());
