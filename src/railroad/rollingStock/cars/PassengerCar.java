@@ -9,5 +9,9 @@ public class PassengerRailroadCar extends Car {
                 "passengers, electricity",
                 true);
     }
+    public String getSummary() {
+        //TODO out all info
+        return null;
+    }
 
 }
