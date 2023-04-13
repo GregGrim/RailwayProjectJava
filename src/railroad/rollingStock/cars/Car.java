@@ -4,16 +4,16 @@ package railroad.rollingStock.cars;
 public abstract class Car{
 private static int counter= 1;
 private String name;
-protected double carWeight;
-protected double loadWeight;
+protected int carWeight;
+protected int loadWeight;
 private String securityInfo;
 
 private final boolean electricalGridNeed ;
 
 Car (String name, String securityInfo, boolean electricalGridNeed) {
     this.name=name+"-"+(counter++);
-    this.carWeight=10+(Math.random()*100);
-    this.loadWeight=20+(Math.random()*500);
+    this.carWeight= (int) (1000+(Math.random()*2000));
+    this.loadWeight= (int) (150+(Math.random()*500));
     this.securityInfo=securityInfo;
     this.electricalGridNeed=electricalGridNeed;
 }
@@ -30,10 +30,18 @@ Car (String name, String securityInfo, boolean electricalGridNeed) {
         return loadWeight;
     }
 
-    @Override
-    public String toString() {
-        return  name+" ";
+    public int getCarWeight() {
+        return carWeight;
     }
 
+    public String getSecurityInfo() {
+        return securityInfo;
+    }
 
+    @Override
+    public String toString() {
+        return  name;
+    }
+
+    public abstract void getSummary() ;
 }

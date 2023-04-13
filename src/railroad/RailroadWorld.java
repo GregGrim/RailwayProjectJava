@@ -6,7 +6,7 @@ import railroad.railwayMap.Station;
 import railroad.rollingStock.Locomotive;
 import railroad.rollingStock.Trainset;
 import railroad.rollingStock.cars.Car;
-import railroad.rollingStock.cars.PassengerRailroadCar;
+import railroad.rollingStock.cars.PassengerCar;
 
 
 import java.io.FileInputStream;
@@ -32,14 +32,14 @@ public class RailroadWorld {
     private Map<String, Locomotive> locomotives = new HashMap<>();
     private Map<Locomotive, Trainset> trains = new HashMap<>();
 
-    public List<Trainset> getSortedTrainsets (Map<Locomotive, Trainset> trains) {
-        List<Trainset> trainsets = new ArrayList<>();
-        for(Trainset t : trains.values()) {
-            trainsets.add(t);
-        }
-//        trainsets.stream().sorted(()).collect(Collectors.toList());
-        // TODO sorting trainsets by route distance
+    public Map<Locomotive, Trainset> getTrains() {
+        return trains;
+    }
 
+    public List<Trainset> getSortedTrainsets () {
+        List<Trainset> trainsets = new ArrayList<>(trains.values());
+        trainsets = trainsets.stream().sorted((Trainset t1, Trainset t2)->
+                 t2.getLocomotive().getRouteDistance()-t1.getLocomotive().getRouteDistance()).toList();
         return trainsets;
     }
 
@@ -50,6 +50,7 @@ public class RailroadWorld {
     private void runProcess () {
         menu(new Scanner(System.in));
     }
+
     /** Generates objects for Railroad World from file
      * @param fileName file currently being read
      */
@@ -69,7 +70,7 @@ public class RailroadWorld {
     public Connection getConnection(Station station1, Station station2) {
         for (Connection c:
              connections) {
-            if(c.equals(new Connection(station1,station2,0))) return c;
+            if(c.equals(new Connection(station1,station2))) return c;
         }
         return null;
     }
@@ -138,7 +139,17 @@ public class RailroadWorld {
                     break;
                 case "sample" :
                     // TODO examples of classes and their methods
-
+                    break;
+                case "report" :
+                    Locomotive loc = locomotives.get(scan.next());
+                    switch (scan.next()) {
+                        case "basic" -> System.out.println(loc.getTrainset());
+                       case "cars" -> loc.getTrainset().getSummaryOfCars();
+                        case "conDistancePassed" ->
+                                System.out.println(loc.getDistance() * 100 / loc.getCurrentConnection().getDistance());
+                        case "routeDistancePassed" ->
+                                System.out.println(loc.getRouteDistancePassed() * 100 / loc.getRouteDistance());
+                    }
                     break;
                 case "test-route" :
                     System.out.println(computeRoute(stations.get("Station-5"),stations.get("Station-4")));
@@ -149,7 +160,7 @@ public class RailroadWorld {
                             Car newCar = null;
                             switch (scan.next()) {
                                 case "passenger":
-                                    newCar = new PassengerRailroadCar("ukrzaliznytsia");
+                                    newCar = new PassengerCar("ukrzaliznytsia");
                                     break;
                             }
                             if(newCar!=null){
@@ -168,8 +179,7 @@ public class RailroadWorld {
                             } else {
                                 Connection newConnection = new Connection(
                                         stations.get(scan.next()),
-                                        stations.get(scan.next()),
-                                        100+(int)(Math.random()*100)
+                                        stations.get(scan.next())
                                 );
                                 connections.add(newConnection);
                                 System.out.println("added: "+newConnection);
@@ -205,6 +215,7 @@ public class RailroadWorld {
                 }
                 case "log"  : {
                     new Logger(this, "AppState.txt");
+                    break;
                 }
             }
         } while(!"quit".equals(command));

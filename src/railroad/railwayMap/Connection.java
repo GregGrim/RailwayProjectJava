@@ -1,7 +1,6 @@
 package railroad.railwayMap;
 
 import railroad.rollingStock.Locomotive;
-import railroad.rollingStock.Trainset;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -13,8 +12,8 @@ public class Connection {
 
     private Queue<Locomotive> queue = new ConcurrentLinkedQueue<>();
 
-    public Connection(Station stationA, Station stationB, int distance) {
-        this.distance=distance;
+    public Connection(Station stationA, Station stationB) {
+        this.distance=1000+(int)(Math.random()*1000);
         this.stationA=stationA;
         this.stationB=stationB;
     }
@@ -41,7 +40,7 @@ public class Connection {
     @Override
     public String toString() {
         return "Connection{"+ stationA.getName() +" - "+ stationB.getName() +
-                "} queue: "+queue;
+                "}";
     }
 
     public Station connectTo (Station station) {

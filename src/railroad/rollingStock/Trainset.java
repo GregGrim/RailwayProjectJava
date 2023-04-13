@@ -1,14 +1,10 @@
 package railroad.rollingStock;
 
 import railroad.exceptions.CannotAttachException;
-
-import railroad.railwayMap.Station;
 import railroad.rollingStock.cars.Car;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 /**
  * Trainset Object that is based on
@@ -19,7 +15,7 @@ public class Trainset{
 
     private List<Car> cars ;
     private int maxCars;
-    private double maxLoad;
+    private int maxLoad;
     private double loaded = 0;
     private int maxElecNeededCars;
     private int elecConnectedCars = 0;
@@ -28,9 +24,9 @@ public class Trainset{
     public Trainset (Locomotive _locomotive) {
         locomotive=_locomotive;
         cars = new ArrayList<>();
-        maxCars = 3+(int)(Math.random()*10);
-        maxLoad = 30+(Math.random()*1000);
-        maxElecNeededCars = maxCars-2;
+        maxCars = 5+(int)(Math.random()*5);
+        maxLoad = (int) (1000+(Math.random()*1000));
+        maxElecNeededCars = maxCars-(int)(Math.random()*3);
     }
 
     public Locomotive getLocomotive() {
@@ -39,7 +35,11 @@ public class Trainset{
 
     @Override
     public String toString() {
-        return locomotive+" : "+cars;
+        return  locomotive+" routeDistance:"+
+                locomotive.getRouteDistance()+
+                " carNum:"+cars.size()+"/"+maxCars+
+                " Load:"+loaded+"/"+maxLoad+
+                " elGrid:"+elecConnectedCars+"/"+maxElecNeededCars;
     }
 
     /**
@@ -58,7 +58,7 @@ public class Trainset{
             cars.add(car);
             loaded+=car.getLoadWeight();
             if (car.isElectricalGridNeed()) elecConnectedCars++;
-            System.out.println(car+" has been attached to "+ this);
+            System.out.println(car.getName()+" has been attached to "+ getLocomotive());
         }
     }
 
@@ -74,14 +74,17 @@ public class Trainset{
 
     /**
      * Method implements sorting cars in trainset for further demonstrating in AppState.txt
-     * @param cars cars of given trainset
      * @return sorted by loadWeight list of cars
      */
-    public List<Car> getSortedCars(List<Car> cars) {
+    public List<Car> getSortedCars() {
         return cars.stream().sorted((Car car1, Car car2) -> (int) (car1.getLoadWeight() - car2.getLoadWeight())).toList();
 
     }
-
+    public void getSummaryOfCars() {
+        for (Car car: cars) {
+            car.getSummary();
+        }
+    }
 
 
     public void setMaxCars(int maxCars) {
@@ -92,7 +95,7 @@ public class Trainset{
         this.maxElecNeededCars = maxElecNeededCars;
     }
 
-    public void setMaxLoad(double maxLoad) {
+    public void setMaxLoad(int maxLoad) {
         this.maxLoad = maxLoad;
     }
 

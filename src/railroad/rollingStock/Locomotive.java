@@ -11,7 +11,7 @@ import static java.lang.Thread.sleep;
 
 public class Locomotive {
     private enum Status {
-        MOVING, ARRIVED, STARTING, SPAWNED, PREPARINGBACK
+        MOVING, ARRIVED, STARTING, SPAWNED, PREPARING_BACK
     }
     private Status status;
     private String name;
@@ -22,6 +22,8 @@ public class Locomotive {
     private Station destinationStation;
 
     private List<Station> route;
+    private int routeDistance;
+    private int routeDistancePassed;
 
     private static int counter= 1;
 
@@ -29,7 +31,7 @@ public class Locomotive {
 
     private boolean running;
     private double speed;
-    private double distance;
+    private int distance;
     private Connection currentConnection;
 
     public Locomotive (Station _homeStation,RailroadWorld _world) {
@@ -37,6 +39,8 @@ public class Locomotive {
         name="locomotive-"+(counter++);
         homeStation=_homeStation;
         sourceStation = homeStation;
+        routeDistance=0;
+        routeDistancePassed=0;
         status = Status.SPAWNED;
     }
 
@@ -47,6 +51,37 @@ public class Locomotive {
 
     public String getName() {
         return name;
+    }
+
+    public int getRouteDistancePassed() {
+        return routeDistancePassed;
+    }
+
+    public int getRouteDistance() {
+        return routeDistance;
+    }
+    public int calculateRouteDistance () {
+        int dist = 0;
+        for (int i = 0; i < route.size()-1; i++) {
+            dist+=world.getConnection(route.get(i), route.get(i+1)).getDistance();
+        }
+        return dist;
+    }
+
+    public Connection getCurrentConnection() {
+        return currentConnection;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public Trainset getTrainset() {
+        return world.getTrains().get(this);
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     public void setSourceStation(Station sourceStation) {
@@ -78,7 +113,7 @@ public class Locomotive {
         if(route!=null) {
             if(onTheWay()) {
                 distance = 0;
-                speed = 50;
+                speed = 180;
             }// else System.out.println(currentConnection+" is occupied, "+this+" cannot move");
         }
     }
@@ -157,7 +192,7 @@ public class Locomotive {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                if (status == Status.PREPARINGBACK) {
+                if (status == Status.PREPARING_BACK) {
                     try {
                         sleep(30000);
                     } catch (InterruptedException e) {
@@ -178,10 +213,14 @@ public class Locomotive {
                 if (status == Status.MOVING) {
                     try {
                         sleep(1000);
+                        mMoving();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
+                    } catch (RailroadHazard e) {
+                        System.err.println(e.getMessage());
+                        speed-=20;
                     }
-                    mMoving();
+
                 }
             }
         }).start();
@@ -190,6 +229,7 @@ public class Locomotive {
     public synchronized void mSpawned() { // 1. locomotive just spawned at home station
          System.out.println(this +" "+ status + " at " + route.get(0));
          start();
+         routeDistance=calculateRouteDistance();
          status = Status.STARTING;
     }
 
@@ -201,7 +241,8 @@ public class Locomotive {
         if (route.size() > 1) {
             status = Status.STARTING;
         } else {
-            status= Status.PREPARINGBACK;
+            status= Status.PREPARING_BACK;
+            System.out.println(this+" "+status+" from "+route.get(0)+" in opposite direction");
         }
     }
     public synchronized void mStarting() { // 2. locomotive is trying to start to the other station on the route
@@ -213,8 +254,8 @@ public class Locomotive {
         }
     }
     public synchronized void mPreparingBack() { // 4. locomotive finished its route and preparing for back journey
-        System.out.println(this+" "+status+" from "+route.get(0)+" in opposite route");
         sourceStation = destinationStation;
+        routeDistancePassed=0;
         route.clear();
         if (!destinationStation.equals(homeStation)) {
             setDestinationStation(homeStation);
@@ -223,12 +264,16 @@ public class Locomotive {
             setDestinationStation(endStation);
             route = world.computeRoute(homeStation, endStation);
         }
+        routeDistance=calculateRouteDistance();
         status=Status.STARTING;
     }
-    public synchronized void mMoving() { // 5. locomotive is moving from station to station
+    public synchronized void mMoving() throws RailroadHazard{ // 5. locomotive is moving from station to station
         System.out.println(this+" "+status+" from "+route.get(0)+
-                " to "+route.get(1)+" "+distance+" / "+currentConnection.getDistance());
+                " to "+route.get(1)+" "+
+                Math.min(distance, currentConnection.getDistance())+"/"+currentConnection.getDistance());
         if (distance < currentConnection.getDistance()) {
+            routeDistancePassed+=(distance+speed<currentConnection.getDistance())?
+                    speed:currentConnection.getDistance()-distance;
             distance += speed;
             if (Math.random() > 0.5)
                 this.speed *= 1.03;
