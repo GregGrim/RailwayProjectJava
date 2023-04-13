@@ -1,5 +1,7 @@
 package railroad.rollingStock.cars;
 
+import railroad.DebugMsg;
+
 public class BaggageMailCar extends Car{
     private String shipper;
     public BaggageMailCar(String name) {
@@ -22,9 +24,9 @@ public class BaggageMailCar extends Car{
     @Override
     public void getSummary() {
         System.out.println(getName());
-        System.out.println("carWeight= "+getCarWeight());
-        System.out.println("loadWeight= "+getLoadWeight()+"shipper:"+shipper);
+        System.out.println("carWeight= "+carWeight);
+        System.out.println("loadWeight= "+loadWeight+"\nshipper:"+shipper);
         System.out.println("securityInfo: "+getSecurityInfo());
-        System.out.println("electricalGreedNeed"+(isElectricalGridNeed()?"Yes":"No"));
+        System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
     }
 }

@@ -1,4 +1,4 @@
-add car passenger
+add car restaurant
 add station
 add station
 add station
@@ -18,7 +18,7 @@ add locomotive Station-1
 add trainset locomotive-4
 add locomotive Station-1
 add trainset locomotive-5
-add car-to-trainset locomotive-1 ukrzaliznytsia-1
+add car-to-trainset locomotive-1 RestaurantCar-1
 run-train locomotive-1 Station-5
 run-train locomotive-2 Station-2
 run-train locomotive-3 Station-4
@@ -26,3 +26,4 @@ run-train locomotive-4 Station-5
 run-train locomotive-5 Station-3
 log
 quit
+;report locomotive-1 conDistancePassed

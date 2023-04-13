@@ -1,11 +1,12 @@
 package railroad.rollingStock.cars;
 
+import railroad.DebugMsg;
+
 public class HeavyFreightCar extends Car{
     private String shipper;
 
-    HeavyFreightCar(String name, String securityInfo, boolean electricalGridNeed) {
+    public HeavyFreightCar(String name) {
         super(name == null?"HeavyFreightCar":name, "heavy weight", false);
-        loadWeight+=500;
         shipper = "Heavis GmbH";
     }
     public void loadCargo (double cargo) {
@@ -28,8 +29,8 @@ public class HeavyFreightCar extends Car{
     public void getSummary() {
         System.out.println(getName());
         System.out.println("carWeight= "+getCarWeight());
-        System.out.println("loadWeight= "+getLoadWeight()+"shipper:"+shipper);
+        System.out.println("loadWeight= "+getLoadWeight()+"\nshipper: "+shipper);
         System.out.println("securityInfo: "+getSecurityInfo());
-        System.out.println("electricalGreedNeed"+(isElectricalGridNeed()?"Yes":"No"));
+        System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
     }
 }

@@ -1,5 +1,7 @@
 package railroad.rollingStock.cars;
 
+import railroad.DebugMsg;
+
 public class PassengerCar extends Car {
     private int numberOfSeats;
     private int numberOfPeople;
@@ -12,15 +14,6 @@ public class PassengerCar extends Car {
         numberOfPeople=50-(int)(Math.random()*20);
         transporter="UkrZaliznytsia";
     }
-
-    public int getNumberOfPeople() {
-        return numberOfPeople;
-    }
-
-    public int getNumberOfSeats() {
-        return numberOfSeats;
-    }
-
     public boolean hasFreeSeat() {
         if(numberOfSeats - numberOfPeople > 0){
             System.out.println(getName()+"has at least 1 free seat");
@@ -39,10 +32,10 @@ public class PassengerCar extends Car {
     }
     public void getSummary() {
         System.out.println(getName());
-        System.out.println("carWeight= "+getCarWeight());
-        System.out.println("numberOfPeople= "+getNumberOfPeople()+"transporter:"+transporter);
-        System.out.println("numberOfSeats= "+getNumberOfSeats());
+        System.out.println("carWeight= "+carWeight);
+        System.out.println("numberOfPeople= "+numberOfPeople+"\n transporter:"+transporter);
+        System.out.println("numberOfSeats= "+numberOfSeats);
         System.out.println("securityInfo: "+getSecurityInfo());
-        System.out.println("electricalGreedNeed"+(isElectricalGridNeed()?"Yes":"No"));
+        System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
     }
 }

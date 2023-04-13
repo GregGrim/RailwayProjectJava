@@ -1,5 +1,6 @@
 package railroad.rollingStock;
 
+import railroad.DebugMsg;
 import railroad.exceptions.CannotAttachException;
 import railroad.rollingStock.cars.Car;
 
@@ -83,6 +84,7 @@ public class Trainset{
     public void getSummaryOfCars() {
         for (Car car: cars) {
             car.getSummary();
+            System.out.println();
         }
     }
 

@@ -28,11 +28,17 @@ public class Logger implements Runnable{
                     osw.write("Cars: "+trainset.getSortedCars()+"\n");
                     osw.write("On the route: "+trainset.getLocomotive().getRoute()+
                             "\nOn "+ trainset.getLocomotive().getCurrentConnection()+"\n");
+                    osw.write(Math.min(trainset.getLocomotive().getDistance() * 100 /
+                            trainset.getLocomotive().getCurrentConnection().getDistance(),100)
+                            +"% of connection passed\n");
+                    osw.write(Math.min(trainset.getLocomotive().getRouteDistancePassed() * 100 /
+                            trainset.getLocomotive().getRouteDistance(),100)+
+                            "% of route passed\n");
                     osw.write("Status: "+trainset.getLocomotive().getStatus()+"\n\n");
                 }
                 osw.close();
                 fil.close();
-                sleep(500);
+                sleep(5000);
             } catch (InterruptedException | IOException e) {
                 throw new RuntimeException(e);
             }

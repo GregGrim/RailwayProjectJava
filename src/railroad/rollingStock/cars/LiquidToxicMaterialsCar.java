@@ -1,5 +1,7 @@
 package railroad.rollingStock.cars;
 
+import railroad.DebugMsg;
+
 public class LiquidToxicMaterialsCar extends ToxicMaterialsCar implements LiquidMaterials{
     private enum Type {
         ETHER, MERCURY, ACID
@@ -8,8 +10,10 @@ public class LiquidToxicMaterialsCar extends ToxicMaterialsCar implements Liquid
     private int capacity;
     private Type liqType;
     private String chemicalName;
-    LiquidToxicMaterialsCar(String name, String securityInfo, boolean electricalGridNeed) {
-        super(name == null?"LiquidToxicMaterialsCar":name, "liquids"+securityInfo, electricalGridNeed);
+    private String securityInfo;
+    public LiquidToxicMaterialsCar(String name) {
+        super(name == null?"LiquidToxicMaterialsCar":name);
+        securityInfo=super.getSecurityInfo()+", liquids";
         capacity=1000;
         double x = Math.random();
         if(x<0.33) {
@@ -62,11 +66,11 @@ public class LiquidToxicMaterialsCar extends ToxicMaterialsCar implements Liquid
     @Override
     public void getSummary() {
         System.out.println(getName());
-        System.out.println("carWeight= "+getCarWeight());
-        System.out.println("loadWeight= "+getLoadWeight()+"shipper:"+super.getShipper());
-        System.out.println("securityInfo: "+getSecurityInfo());
-        System.out.println("electricalGreedNeed"+(isElectricalGridNeed()?"Yes":"No"));
-        System.out.println("material Type: "+super.getMatType()+ "chemicalName= "+chemicalName);
+        System.out.println("carWeight= "+carWeight);
+        System.out.println("loadWeight= "+loadWeight+"\nshipper: "+super.getShipper());
+        System.out.println("securityInfo: "+securityInfo);
+        System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
+        System.out.println("liquid Type: "+liqType+ "\nchemicalName= "+chemicalName);
 
     }
 }

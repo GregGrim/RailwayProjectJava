@@ -1,5 +1,7 @@
 package railroad.rollingStock.cars;
 
+import railroad.DebugMsg;
+
 public class LiquidMaterialsCar extends BasicFreightCar implements LiquidMaterials{
     enum Type {
         WATER, OIL, GASOLINE
@@ -7,8 +9,10 @@ public class LiquidMaterialsCar extends BasicFreightCar implements LiquidMateria
     private Type liqType;
     private double volume;
     private int capacity;
-    LiquidMaterialsCar(String name, String securityInfo, boolean electricalGridNeed) {
-        super(name == null?"LiquidMaterialsCar":name, "liquids", false);
+    private String securityInfo;
+    public LiquidMaterialsCar(String name) {
+        super(name == null?"LiquidMaterialsCar":name);
+        securityInfo="liquids";
         double x = Math.random();
         capacity=1000;
         if(x<0.33) {
@@ -54,8 +58,11 @@ public class LiquidMaterialsCar extends BasicFreightCar implements LiquidMateria
     }
     @Override
     public void getSummary() {
-        super.getSummary();
-        System.out.println("Capacity= "+capacity);
-        System.out.println("liquid Type: "+liqType+ "volume= "+volume);
+        System.out.println(getName());
+        System.out.println("carWeight= "+carWeight);
+        System.out.println("loadWeight= "+loadWeight+"\ncapacity= "+capacity);
+        System.out.println("securityInfo: "+securityInfo);
+        System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
+        System.out.println("liquid Type: "+liqType+ "\nvolume= "+volume);
     }
 }

@@ -5,8 +5,7 @@ import railroad.railwayMap.Connection;
 import railroad.railwayMap.Station;
 import railroad.rollingStock.Locomotive;
 import railroad.rollingStock.Trainset;
-import railroad.rollingStock.cars.Car;
-import railroad.rollingStock.cars.PassengerCar;
+import railroad.rollingStock.cars.*;
 
 
 import java.io.FileInputStream;
@@ -127,7 +126,7 @@ public class RailroadWorld {
      */
     private void menu (Scanner scan) {
         String command;
-        do  {
+        do  { 
             System.out.print(">");
             command = scan.next();
             switch (command) {
@@ -137,18 +136,29 @@ public class RailroadWorld {
                 case "load" :
                     genFromFile(scan.next());
                     break;
+                case "debug" :
+                    DebugMsg.setDebugLevel(Integer.parseInt(scan.next()));
+                    break;
                 case "sample" :
                     // TODO examples of classes and their methods
                     break;
                 case "report" :
                     Locomotive loc = locomotives.get(scan.next());
-                    switch (scan.next()) {
+                    String option = scan.next();
+                    if(loc==null) {
+                        System.out.println("Train not found");
+                    } else switch (option) {
                         case "basic" -> System.out.println(loc.getTrainset());
-                       case "cars" -> loc.getTrainset().getSummaryOfCars();
+                        case "cars" -> {
+                            System.out.println("Cars:");
+                        loc.getTrainset().getSummaryOfCars();
+                        }
                         case "conDistancePassed" ->
-                                System.out.println(loc.getDistance() * 100 / loc.getCurrentConnection().getDistance());
+                                System.out.println(Math.min(loc.getDistance() * 100 /
+                                        loc.getCurrentConnection().getDistance(),100)+"%");
                         case "routeDistancePassed" ->
-                                System.out.println(loc.getRouteDistancePassed() * 100 / loc.getRouteDistance());
+                                System.out.println(Math.min(loc.getRouteDistancePassed() * 100 /
+                                        loc.getRouteDistance(),100)+"%");
                     }
                     break;
                 case "test-route" :
@@ -157,12 +167,21 @@ public class RailroadWorld {
                 case "add":
                     switch (scan.next()) {
                         case "car" :
-                            Car newCar = null;
-                            switch (scan.next()) {
-                                case "passenger":
-                                    newCar = new PassengerCar("ukrzaliznytsia");
-                                    break;
-                            }
+                            Car newCar = switch (scan.next()) {
+                                case "passenger" -> new PassengerCar(null);
+                                case "baggageMail" -> new BaggageMailCar(null);
+                                case "basicFreight" -> new BasicFreightCar(null);
+                                case "expMat" -> new ExplosiveMaterialsCar(null);
+                                case "gasMat" -> new GaseousMaterialsCar(null);
+                                case "heavyFreight" -> new HeavyFreightCar(null);
+                                case "liqMat" -> new LiquidMaterialsCar(null);
+                                case "liqToxMat" -> new LiquidToxicMaterialsCar(null);
+                                case "postOffice" -> new PostOfficeCar(null);
+                                case "refrigerated" -> new RefrigeratedCar(null);
+                                case "restaurant" -> new RestaurantCar(null);
+                                case "toxMat" -> new ToxicMaterialsCar(null);
+                                default -> null;
+                            };
                             if(newCar!=null){
                                 cars.put(newCar.getName(), newCar);
                                 System.out.println("added: "+newCar);

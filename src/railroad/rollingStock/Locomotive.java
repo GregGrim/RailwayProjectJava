@@ -1,5 +1,6 @@
 package railroad.rollingStock;
 
+import railroad.DebugMsg;
 import railroad.exceptions.RailroadHazard;
 import railroad.railwayMap.Connection;
 import railroad.railwayMap.Station;
@@ -96,7 +97,7 @@ public class Locomotive {
 
         this.destinationStation = destinationStation;
         route = world.computeRoute(sourceStation, destinationStation);
-        System.out.println("computed route for "+this+" is "+route);
+        DebugMsg.msg("computed route for "+this+" is "+route);
     }
 
     public List<Station> getRoute() {
@@ -227,14 +228,14 @@ public class Locomotive {
     }
 
     public synchronized void mSpawned() { // 1. locomotive just spawned at home station
-         System.out.println(this +" "+ status + " at " + route.get(0));
+         DebugMsg.msg(this +" "+ status + " at " + route.get(0));
          start();
          routeDistance=calculateRouteDistance();
          status = Status.STARTING;
     }
 
     public synchronized void mArrived() { // 3. locomotive just arrived to station
-        System.out.println(this +" "+ status + " to " + route.get(1));
+        DebugMsg.msg(this +" "+ status + " to " + route.get(1));
         currentConnection.removeFromQueue(this);
         speed = 0;
         route.remove(0);
@@ -242,13 +243,13 @@ public class Locomotive {
             status = Status.STARTING;
         } else {
             status= Status.PREPARING_BACK;
-            System.out.println(this+" "+status+" from "+route.get(0)+" in opposite direction");
+            DebugMsg.msg(this+" "+status+" from "+route.get(0)+" in opposite direction");
         }
     }
     public synchronized void mStarting() { // 2. locomotive is trying to start to the other station on the route
         start();
         if(onTheWay()) {
-            System.out.println(this+" "+status+" from "+route.get(0)+" to "+
+            DebugMsg.msg(this+" "+status+" from "+route.get(0)+" to "+
                     route.get(1)+" Queue: "+currentConnection.getQueue());
             status = Status.MOVING;
         }
@@ -268,7 +269,7 @@ public class Locomotive {
         status=Status.STARTING;
     }
     public synchronized void mMoving() throws RailroadHazard{ // 5. locomotive is moving from station to station
-        System.out.println(this+" "+status+" from "+route.get(0)+
+        DebugMsg.msg(this+" "+status+" from "+route.get(0)+
                 " to "+route.get(1)+" "+
                 Math.min(distance, currentConnection.getDistance())+"/"+currentConnection.getDistance());
         if (distance < currentConnection.getDistance()) {

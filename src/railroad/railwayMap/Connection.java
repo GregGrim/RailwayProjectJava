@@ -1,5 +1,6 @@
 package railroad.railwayMap;
 
+import railroad.DebugMsg;
 import railroad.rollingStock.Locomotive;
 
 import java.util.Queue;
@@ -25,7 +26,7 @@ public class Connection {
     public void setToQueue(Locomotive locomotive) {
 
         if(!queue.contains(locomotive)) {
-            System.out.println("set to queue "+locomotive);
+            DebugMsg.msg("set to queue "+locomotive);
             queue.offer(locomotive);
         }
     }

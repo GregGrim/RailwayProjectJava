@@ -1,5 +1,7 @@
 package railroad.rollingStock.cars;
 
+import railroad.DebugMsg;
+
 public class GaseousMaterialsCar extends BasicFreightCar{
     enum Type {
         OXYGEN, NITROGEN, ARGON
@@ -8,9 +10,11 @@ public class GaseousMaterialsCar extends BasicFreightCar{
     private double volume; // volume under atmospheric pressure
 
     private int capacity;
+    private String securityInfo;
 
-    GaseousMaterialsCar(String name, boolean electricalGridNeed) {
-        super(name == null?"GaseousMaterialsCar":name, "gases", electricalGridNeed);
+    public GaseousMaterialsCar(String name) {
+        super(name == null?"GaseousMaterialsCar":name);
+        securityInfo="gases";
         capacity=2500;
         double x = Math.random();
         if(x<0.33) {
@@ -50,8 +54,11 @@ public class GaseousMaterialsCar extends BasicFreightCar{
     }
     @Override
     public void getSummary() {
-        super.getSummary();
-        System.out.println("Capacity= "+capacity);
-        System.out.println("gas Type: "+gasType+ "volume= "+volume);
+        System.out.println(getName());
+        System.out.println("carWeight= "+carWeight);
+        System.out.println("loadWeight= "+loadWeight+"\ncapacity="+capacity);
+        System.out.println("securityInfo: "+securityInfo);
+        System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
+        System.out.println("gas Type: "+gasType+ "\nvolume= "+volume);
     }
 }

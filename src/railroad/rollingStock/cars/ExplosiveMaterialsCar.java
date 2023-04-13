@@ -1,10 +1,14 @@
 package railroad.rollingStock.cars;
 
+import railroad.DebugMsg;
+
 public class ExplosiveMaterialsCar extends HeavyFreightCar{
     private int capacity;
-    ExplosiveMaterialsCar(String name, String securityInfo, boolean electricalGridNeed) {
-        super(name == null?"ExplosiveMaterialsCar":name, "explosive"+securityInfo, electricalGridNeed);
+    private String securityInfo;
+    public ExplosiveMaterialsCar(String name) {
+        super(name == null?"ExplosiveMaterialsCar":name);
         capacity=loadWeight+(int)(Math.random()*500);
+        securityInfo=super.getSecurityInfo()+", explosive";
     }
     public boolean isAtRiskOfExploding() {
         final double EXPLOSIVE_RISK_THRESHOLD = 90.0;
@@ -24,7 +28,11 @@ public class ExplosiveMaterialsCar extends HeavyFreightCar{
 
     @Override
     public void getSummary() {
-        super.getSummary();
+        System.out.println(getName());
+        System.out.println("carWeight= "+carWeight);
+        System.out.println("loadWeight= "+loadWeight+"\ncapacity="+capacity);
+        System.out.println("securityInfo: "+securityInfo);
+        System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
         System.out.println("Is at risk: "+isAtRiskOfExploding());
     }
 
