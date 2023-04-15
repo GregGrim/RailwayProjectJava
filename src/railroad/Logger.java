@@ -21,6 +21,7 @@ public class Logger implements Runnable{
     public void run() {
         while (true) {
             try {
+                sleep(1000);
                 FileOutputStream fil = new FileOutputStream(fileName,false);
                 OutputStreamWriter osw = new OutputStreamWriter(fil);
                 for (Trainset trainset : world.getSortedTrainsets()) {
@@ -38,7 +39,7 @@ public class Logger implements Runnable{
                 }
                 osw.close();
                 fil.close();
-                sleep(5000);
+                sleep(4000);
             } catch (InterruptedException | IOException e) {
                 throw new RuntimeException(e);
             }

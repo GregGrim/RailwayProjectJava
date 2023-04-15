@@ -59,6 +59,7 @@ public class Trainset{
             cars.add(car);
             loaded+=car.getLoadWeight();
             if (car.isElectricalGridNeed()) elecConnectedCars++;
+            car.setTrainset(this);
             System.out.println(car.getName()+" has been attached to "+ getLocomotive());
         }
     }
@@ -69,8 +70,18 @@ public class Trainset{
     public void detachCar() {
         if(cars.size()>0) {
             System.out.println(cars.get(cars.size() - 1) + "has been detached");
+            cars.get(cars.size()-1).setTrainset(null);
             cars.remove(cars.size() - 1);
+
         } else System.out.println("no cars left in trainset");
+    }
+
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
+
+    public List<Car> getCars() {
+        return cars;
     }
 
     /**

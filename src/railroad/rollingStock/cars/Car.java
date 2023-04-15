@@ -1,12 +1,15 @@
 package railroad.rollingStock.cars;
 
 
+import railroad.rollingStock.Trainset;
+
 public abstract class Car{
 private static int counter= 1;
 private String name;
 protected int carWeight;
 protected int loadWeight;
 private String securityInfo;
+private Trainset trainset;
 
 private final boolean electricalGridNeed ;
 
@@ -16,6 +19,7 @@ Car (String name, String securityInfo, boolean electricalGridNeed) {
     this.loadWeight= (int) (150+(Math.random()*500));
     this.securityInfo=securityInfo;
     this.electricalGridNeed=electricalGridNeed;
+    this.trainset=null;
 }
 
     public String getName() {
@@ -32,6 +36,14 @@ Car (String name, String securityInfo, boolean electricalGridNeed) {
 
     public int getCarWeight() {
         return carWeight;
+    }
+
+    public Trainset getTrainset() {
+        return trainset;
+    }
+
+    public void setTrainset(Trainset trainset) {
+        this.trainset = trainset;
     }
 
     public String getSecurityInfo() {

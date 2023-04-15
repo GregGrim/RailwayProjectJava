@@ -7,11 +7,11 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Connection {
-    private Station stationA;
-    private Station stationB;
-    private int distance;
+    private final Station stationA;
+    private final Station stationB;
+    private final int distance;
 
-    private Queue<Locomotive> queue = new ConcurrentLinkedQueue<>();
+    private final Queue<Locomotive> queue = new ConcurrentLinkedQueue<>();
 
     public Connection(Station stationA, Station stationB) {
         this.distance=1000+(int)(Math.random()*1000);
@@ -59,8 +59,7 @@ public class Connection {
         if (connection == null) {
             return false;
         }
-        if(connection instanceof Connection) {
-            Connection c = (Connection) connection;
+        if(connection instanceof Connection c) {
             return  this.stationA.equals(c.stationA)&&this.stationB.equals(c.stationB)||
                     this.stationA.equals(c.stationB)&&this.stationB.equals(c.stationA);
         } else return false;
@@ -68,5 +67,13 @@ public class Connection {
 
     public int getDistance() {
         return distance;
+    }
+
+    public Station getStationA() {
+        return stationA;
+    }
+
+    public Station getStationB() {
+        return stationB;
     }
 }

@@ -34,6 +34,7 @@ public class Locomotive {
     private double speed;
     private int distance;
     private Connection currentConnection;
+    private boolean shouldRecalc;
 
     public Locomotive (Station _homeStation,RailroadWorld _world) {
         world=_world;
@@ -54,6 +55,10 @@ public class Locomotive {
         return name;
     }
 
+    public Station getDestinationStation() {
+        return destinationStation;
+    }
+
     public int getRouteDistancePassed() {
         return routeDistancePassed;
     }
@@ -68,6 +73,21 @@ public class Locomotive {
         }
         return dist;
     }
+
+    public boolean hasConnectionInRoute(Connection connection){
+        for (int i = 0; i < route.size()-1; i++) {
+           Connection con = new Connection(route.get(i), route.get(i+1));
+           if (connection.equals(con)){
+               return true;
+           }
+        }
+        return false;
+    }
+
+    public Station getHomeStation() {
+        return homeStation;
+    }
+
 
     public Connection getCurrentConnection() {
         return currentConnection;
@@ -85,6 +105,9 @@ public class Locomotive {
         return status;
     }
 
+    public void setShouldRecalc(boolean shouldRecalc) {
+        this.shouldRecalc = shouldRecalc;
+    }
     public void setSourceStation(Station sourceStation) {
         this.sourceStation = sourceStation;
     }
@@ -129,6 +152,7 @@ public class Locomotive {
         tryToStart();
     }
     public void stop() {
+        if(route!=null) currentConnection.getQueue().remove(this);
         speed=0;
         running = false;
     }
@@ -246,7 +270,12 @@ public class Locomotive {
             DebugMsg.msg(this+" "+status+" from "+route.get(0)+" in opposite direction");
         }
     }
-    public synchronized void mStarting() { // 2. locomotive is trying to start to the other station on the route
+    public synchronized void mStarting() {// 2. locomotive is trying to start to the other station on the route
+        if(shouldRecalc) {
+            route = world.computeRoute(route.get(0), destinationStation);
+            DebugMsg.msg("computed route for "+this+" is "+route);
+            shouldRecalc=false;
+        }
         start();
         if(onTheWay()) {
             DebugMsg.msg(this+" "+status+" from "+route.get(0)+" to "+
