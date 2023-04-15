@@ -1,9 +1,7 @@
 package railroad.rollingStock;
 
-import railroad.DebugMsg;
 import railroad.exceptions.CannotAttachException;
 import railroad.rollingStock.cars.Car;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class Trainset{
     private int maxElecNeededCars;
     private int elecConnectedCars = 0;
 
-    private Locomotive locomotive;
+    private final Locomotive locomotive;
     public Trainset (Locomotive _locomotive) {
         locomotive=_locomotive;
         cars = new ArrayList<>();
@@ -92,22 +90,22 @@ public class Trainset{
         return cars.stream().sorted((Car car1, Car car2) -> (int) (car1.getLoadWeight() - car2.getLoadWeight())).toList();
 
     }
+
+    /**
+     * prints summary info about cars in train
+     */
     public void getSummaryOfCars() {
         for (Car car: cars) {
             car.getSummary();
             System.out.println();
         }
     }
-
-
     public void setMaxCars(int maxCars) {
         this.maxCars = maxCars;
     }
-
     public void setMaxElecNeededCars(int maxElecNeededCars) {
         this.maxElecNeededCars = maxElecNeededCars;
     }
-
     public void setMaxLoad(int maxLoad) {
         this.maxLoad = maxLoad;
     }

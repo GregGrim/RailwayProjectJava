@@ -1,7 +1,10 @@
 package railroad.railwayMap;
 
+/**
+ * Basic railroad world class that simulates stations characterized by name
+ */
 public class Station {
-    private String name;
+    private final String name;
     private static int counter = 1;
 
     public Station () {
@@ -17,15 +20,20 @@ public class Station {
         return name;
     }
 
+    /**
+     * overriden method equals that comparing stations by name
+     * @param station
+     * @return boolean
+     */
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    public boolean equals(Object station) {
+        if (station == null) {
             return false;
         }
-        if (obj.getClass() != this.getClass()) {
+        if (station.getClass() != this.getClass()) {
             return false;
         }
-        final Station other = (Station) obj;
+        final Station other = (Station) station;
         return (other.name.equals(this.name));
     }
 }

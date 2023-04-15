@@ -5,37 +5,32 @@ import railroad.exceptions.RailroadHazard;
 import railroad.railwayMap.Connection;
 import railroad.railwayMap.Station;
 import railroad.RailroadWorld;
-
 import java.util.List;
-
 import static java.lang.Thread.sleep;
 
+/**
+ * Basic railroad world class that implements main part of train movement simulation
+ */
 public class Locomotive {
-    private enum Status {
+    private enum Status { // all possible statuses of train in world
         MOVING, ARRIVED, STARTING, SPAWNED, PREPARING_BACK
     }
     private Status status;
-    private String name;
+    private final String name;
     private final Station homeStation;
     private Station sourceStation;
-
     private Station endStation;
     private Station destinationStation;
-
     private List<Station> route;
     private int routeDistance;
     private int routeDistancePassed;
-
     private static int counter= 1;
-
-    private RailroadWorld world;
-
+    private final RailroadWorld world;
     private boolean running;
     private double speed;
     private int distance;
     private Connection currentConnection;
     private boolean shouldRecalc;
-
     public Locomotive (Station _homeStation,RailroadWorld _world) {
         world=_world;
         name="locomotive-"+(counter++);
@@ -45,27 +40,27 @@ public class Locomotive {
         routeDistancePassed=0;
         status = Status.SPAWNED;
     }
-
     @Override
     public String toString() {
         return getName();
     }
-
     public String getName() {
         return name;
     }
-
     public Station getDestinationStation() {
         return destinationStation;
     }
-
     public int getRouteDistancePassed() {
         return routeDistancePassed;
     }
-
     public int getRouteDistance() {
         return routeDistance;
     }
+
+    /**
+     * calculate route distance for this loco
+     * @return route distance for this loco
+     */
     public int calculateRouteDistance () {
         int dist = 0;
         for (int i = 0; i < route.size()-1; i++) {
@@ -74,6 +69,11 @@ public class Locomotive {
         return dist;
     }
 
+    /**
+     * checks if particular connection is in route
+     * @param connection connection to check
+     * @return boolean
+     */
     public boolean hasConnectionInRoute(Connection connection){
         for (int i = 0; i < route.size()-1; i++) {
            Connection con = new Connection(route.get(i), route.get(i+1));
@@ -83,56 +83,50 @@ public class Locomotive {
         }
         return false;
     }
-
     public Station getHomeStation() {
         return homeStation;
     }
-
-
     public Connection getCurrentConnection() {
         return currentConnection;
     }
-
     public int getDistance() {
         return distance;
     }
-
     public Trainset getTrainset() {
         return world.getTrains().get(this);
     }
-
     public Status getStatus() {
         return status;
     }
-
     public void setShouldRecalc(boolean shouldRecalc) {
         this.shouldRecalc = shouldRecalc;
     }
-    public void setSourceStation(Station sourceStation) {
-        this.sourceStation = sourceStation;
-    }
-
     public void setEndStation(Station endStation) {
         this.endStation = endStation;
     }
-
     public void setDestinationStation(Station destinationStation) {
-
         this.destinationStation = destinationStation;
         route = world.computeRoute(sourceStation, destinationStation);
         DebugMsg.msg("computed route for "+this+" is "+route);
     }
-
     public List<Station> getRoute() {
         return route;
     }
-
     public void setRunning(boolean running) {
         this.running = running;
     }
+
+    /**
+     * checks if it`s time for loco to start from station(1st in queue)
+     * @return boolean
+     */
     public boolean onTheWay() {
         return currentConnection.onTheWay(this);
     }
+
+    /**
+     * trying to start(checks queue and route)
+     */
     public void tryToStart () {
         if(route!=null) {
             if(onTheWay()) {
@@ -141,26 +135,41 @@ public class Locomotive {
             }// else System.out.println(currentConnection+" is occupied, "+this+" cannot move");
         }
     }
+
+    /**
+     * setting loco to queue of current connection  (if it's not done yet)
+     */
     public void setToQueue() {
         if(route!=null) {
             currentConnection  = world.getConnection(route.get(0), route.get(1));
             currentConnection.setToQueue(this);
         }
     }
+
+    /**
+     * function to start train movement from station
+     */
     public void start() {
         setToQueue();
         tryToStart();
     }
+
+    /**
+     * function to stop train movement and kill threads
+     */
     public void stop() {
         if(route!=null) currentConnection.getQueue().remove(this);
         speed=0;
         running = false;
     }
-
     public boolean isRunning() {
         return running;
     }
 
+    /**
+     * start general train movement by creating threads(each thread is calling functions depending on train status)
+     * @param destinationStation direction
+     */
     public void startTrain(Station destinationStation) {
         setEndStation(destinationStation);
         setDestinationStation(destinationStation);
@@ -251,14 +260,27 @@ public class Locomotive {
         }).start();
     }
 
-    public synchronized void mSpawned() { // 1. locomotive just spawned at home station
+    /**
+     * function for locomotive that just spawned at home station (status: SPAWNED)
+     * starts or trying to start its movement depending on queue
+     * calculating distance
+     * delegates train to thread with status STARTING
+     */
+    public synchronized void mSpawned() {
          DebugMsg.msg(this +" "+ status + " at " + route.get(0));
          start();
          routeDistance=calculateRouteDistance();
          status = Status.STARTING;
     }
 
-    public synchronized void mArrived() { // 3. locomotive just arrived to station
+    /**
+     * function for locomotive that just arrived to station
+     * removes it from passed connection queue
+     * sets speed zero
+     * removes previous station from route
+     * depending on remained route delegates train to tread with status STARTING or with status PREPARING_BACK
+     */
+    public synchronized void mArrived() {
         DebugMsg.msg(this +" "+ status + " to " + route.get(1));
         currentConnection.removeFromQueue(this);
         speed = 0;
@@ -270,7 +292,14 @@ public class Locomotive {
             DebugMsg.msg(this+" "+status+" from "+route.get(0)+" in opposite direction");
         }
     }
-    public synchronized void mStarting() {// 2. locomotive is trying to start to the other station on the route
+
+    /**
+     * function for locomotive that is trying to start to the other station on the route
+     * if connection from route was deleted -> recalculates route
+     * starts or trying to start its movement depending on queue
+     * if starts -> delegates train to thread with status MOVING
+     */
+    public synchronized void mStarting() {
         if(shouldRecalc) {
             route = world.computeRoute(route.get(0), destinationStation);
             DebugMsg.msg("computed route for "+this+" is "+route);
@@ -283,7 +312,13 @@ public class Locomotive {
             status = Status.MOVING;
         }
     }
-    public synchronized void mPreparingBack() { // 4. locomotive finished its route and preparing for back journey
+
+    /**
+     * function for locomotive that finished its route and preparing for back journey
+     * recalculate route in opposite direction
+     * delegates train to thread with status STARTING
+     */
+    public synchronized void mPreparingBack() {
         sourceStation = destinationStation;
         routeDistancePassed=0;
         route.clear();
@@ -297,7 +332,14 @@ public class Locomotive {
         routeDistance=calculateRouteDistance();
         status=Status.STARTING;
     }
-    public synchronized void mMoving() throws RailroadHazard{ // 5. locomotive is moving from station to station
+
+    /**
+     * function for locomotive that is moving from station to station
+     * if connection distance passed delegates train to thread with status ARRIVED
+     * else keep moving
+     * @throws RailroadHazard if speed reaches 200km/h
+     */
+    public synchronized void mMoving() throws RailroadHazard{
         DebugMsg.msg(this+" "+status+" from "+route.get(0)+
                 " to "+route.get(1)+" "+
                 Math.min(distance, currentConnection.getDistance())+"/"+currentConnection.getDistance());

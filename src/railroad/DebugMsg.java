@@ -1,5 +1,8 @@
 package railroad;
 
+/**
+ * Class created for splitting outputs by debug mod for convenient program debugging
+ */
 public class DebugMsg {
     private static int debugLevel = 0;
     public static  void msg(Object txt, int level) {

@@ -35,6 +35,11 @@ public class RailroadWorld {
         return trains;
     }
 
+    /**
+     * sorting trainsets by the length of route
+     * @return sorted list of trainsets
+     */
+
     public List<Trainset> getSortedTrainsets () {
         List<Trainset> trainsets = new ArrayList<>(trains.values());
         trainsets = trainsets.stream().sorted((Trainset t1, Trainset t2)->
@@ -42,13 +47,28 @@ public class RailroadWorld {
         return trainsets;
     }
 
+    /**
+     * function checks if class is child of ...
+     * @param parentCls parent object
+     * @param object child object
+     * @return boolean
+     * @param <Y>
+     * @param <T>
+     */
     public <Y, T> boolean isChildOf(Class<Y> parentCls, T object){
         return parentCls.isAssignableFrom(object.getClass());
     }
+
+    /**
+     * generic function that deletes object from world even if threads are running
+     * @param object
+     * @param <T> any basic class of railroad world
+     */
     public synchronized <T> void deleteObject(T object) {
             if (isChildOf(Car.class, object)){
                 Car car = (Car)object;
                 String carName = car.getName();
+                // if car is in trainset removes it from trainset and remove car
                 if(car.getTrainset()!=null) {
                     List<Car> remainedCars = car.getTrainset().getCars();
                     remainedCars.removeIf(c-> carName.equals(c.getName()));
@@ -58,7 +78,9 @@ public class RailroadWorld {
             } else if (isChildOf(Locomotive.class, object)) {
                 Locomotive locomotive = (Locomotive)object;
                 String locomotiveName = locomotive.getName();
+                //stops locomotive threads
                 locomotive.stop();
+                //removes all cars from train and deletes loco and train
                 locomotive.getTrainset().getCars().forEach(this::deleteObject);
                 trains.remove(locomotive);
                 locomotives.remove(locomotiveName);
@@ -173,9 +195,14 @@ public class RailroadWorld {
      * main input method that implements commands from text interface
      * <ol>
      *      <li> <font color="red">quit </font> -> to shut down the program
+     *      <li> <font color="red">debug </font> -> to set debug mode
+     *      <li> <font color="red">report </font> -> to get specific info
      *      <li> <font color="red">load fileName.txt </font>-> to load data from file
      *      <li> <font color="red">test-route StationName StationName </font>-> to execute computeRoute process
-     *      <li> <font color="red">add Object(constructor) </font>-> to add object manually
+     *      <li> <font color="red">add Object(constructor) </font>-> to add object
+     *      <li> <font color="red">remove Object(constructor) </font>-> to remove object
+     *      <li> <font color="red">run-train </font>-> to start threads of train(train movement simulation)
+     *      <li> <font color="red">log </font> -> to start thread logger that rewriting general info in AppState.txt each 5sec
      * </ol>
      * @param scan input Scanner
      */
@@ -332,6 +359,5 @@ public class RailroadWorld {
                 }
             }
         } while(!"quit".equals(command));
-
     }
 }
