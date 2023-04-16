@@ -1,15 +1,13 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class LiquidMaterialsCar extends BasicFreightCar implements LiquidMaterials{
     enum Type {
         WATER, OIL, GASOLINE
     }
-    private Type liqType;
+    private final Type liqType;
     private double volume;
-    private int capacity;
-    private String securityInfo;
+    private final int capacity;
+    private final String securityInfo;
     public LiquidMaterialsCar(String name) {
         super(name == null?"LiquidMaterialsCar":name);
         securityInfo="liquids";

@@ -1,9 +1,7 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class BaggageMailCar extends Car{
-    private String shipper;
+    private final String shipper;
     public BaggageMailCar(String name) {
         super(name == null?"BaggageMailCar":name, "-", false);
         shipper="FedEx";
@@ -17,8 +15,10 @@ public class BaggageMailCar extends Car{
         if(loadWeight-cargo>0) {
             loadWeight -= cargo;
             System.out.println(cargo+"kg loaded to "+getName());
+        } else {
+            loadWeight=0;
+            System.out.println("No more cargo left on "+getName());
         }
-        else System.out.println("No more cargo left on "+getName());
     }
 
     @Override

@@ -36,8 +36,8 @@ public class Connection {
 
     /**
      * removes head of queue
-     * @param locomotive
-     * @throws RuntimeException
+     * @param locomotive loco to be removed from queue
+     * @throws RuntimeException if queue is empty
      */
     public void removeFromQueue(Locomotive locomotive) throws RuntimeException{
         if(!locomotive.equals(queue.poll())) {
@@ -47,7 +47,7 @@ public class Connection {
 
     /**
      * checks if loco is first in queue(running on connection)
-     * @param locomotive
+     * @param locomotive loco to be checked
      * @return boolean
      */
     public boolean onTheWay(Locomotive locomotive) {
@@ -61,7 +61,7 @@ public class Connection {
 
     /**
      * finding second end of connection
-     * @param station
+     * @param station first end of connection
      * @return station
      */
     public Station connectTo (Station station) {
@@ -72,8 +72,8 @@ public class Connection {
 
     /**
      * checks if stations are connected
-     * @param station
-     * @return
+     * @param station to be checked
+     * @return boolean
      */
     public boolean isConnected (Station station) {
         return connectTo(station)!=null;
@@ -81,7 +81,7 @@ public class Connection {
 
     /**
      * overriden method equals that comparing connections by 2 stations
-     * @param connection
+     * @param connection connection to be compared
      * @return boolean
      */
     @Override

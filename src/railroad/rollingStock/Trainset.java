@@ -24,7 +24,7 @@ public class Trainset{
         locomotive=_locomotive;
         cars = new ArrayList<>();
         maxCars = 5+(int)(Math.random()*5);
-        maxLoad = (int) (1000+(Math.random()*1000));
+        maxLoad = (int) (5000+(Math.random()*5000));
         maxElecNeededCars = maxCars-(int)(Math.random()*3);
     }
 

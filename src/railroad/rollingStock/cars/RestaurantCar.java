@@ -1,11 +1,9 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class RestaurantCar extends Car{
     private int seatingCapacity;
-    private boolean isSmokingAllowed;
-    private boolean hasBar;
+    private final boolean isSmokingAllowed;
+    private final boolean hasBar;
 
     public RestaurantCar(String name) {
         super(name == null?"RestaurantCar":name, "passengers, electricity", true);
@@ -13,12 +11,10 @@ public class RestaurantCar extends Car{
         this.isSmokingAllowed= Math.random() > 0.5;
         this.hasBar= Math.random() > 0.5;
     }
-
     public void addSeatingCapacity(int additionalCapacity) {
         seatingCapacity += additionalCapacity;
         System.out.println("Seating capacity in " + getName() + " increased to " + seatingCapacity);
     }
-
     @Override
     public void getSummary() {
         String smokingAllowed = isSmokingAllowed ? "Yes" : "No";

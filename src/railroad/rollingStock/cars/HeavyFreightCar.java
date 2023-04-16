@@ -1,9 +1,7 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class HeavyFreightCar extends Car{
-    private String shipper;
+    private final String shipper;
 
     public HeavyFreightCar(String name) {
         super(name == null?"HeavyFreightCar":name, "heavy weight", false);

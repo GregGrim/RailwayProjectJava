@@ -5073,6 +5073,251 @@ add locomotive Station-22
 add locomotive Station-23
 add locomotive Station-24
 add locomotive Station-25
+add car passenger
+add car passenger
+add car passenger
+add car passenger
+add car passenger
+add car passenger
+add car passenger
+add car passenger
+add car passenger
+add car passenger
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car baggageMail
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car basicFreight
+add car expMat
+add car expMat
+add car expMat
+add car expMat
+add car expMat
+add car expMat
+add car expMat
+add car expMat
+add car expMat
+add car expMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car gasMat
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car heavyFreight
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car liqToxMat
+add car postOffice
+add car postOffice
+add car postOffice
+add car postOffice
+add car postOffice
+add car postOffice
+add car postOffice
+add car postOffice
+add car postOffice
+add car postOffice
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car refrigerated
+add car restaurant
+add car restaurant
+add car restaurant
+add car restaurant
+add car restaurant
+add car restaurant
+add car restaurant
+add car restaurant
+add car restaurant
+add car restaurant
+add car toxMat
+add car toxMat
+add car toxMat
+add car toxMat
+add car toxMat
+add car toxMat
+add car toxMat
+add car toxMat
+add car toxMat
+add car toxMat
+add car-to-trainset locomotive-1 PassengerCar-1
+add car-to-trainset locomotive-1 BaggageMailCar-11
+add car-to-trainset locomotive-1 BasicFreightCar-21
+add car-to-trainset locomotive-1 RestaurantCar-101
+add car-to-trainset locomotive-1 RefrigeratedCar-91
+add car-to-trainset locomotive-2 PassengerCar-2
+add car-to-trainset locomotive-2 BaggageMailCar-12
+add car-to-trainset locomotive-2 BasicFreightCar-22
+add car-to-trainset locomotive-2 RestaurantCar-102
+add car-to-trainset locomotive-2 RefrigeratedCar-92
+add car-to-trainset locomotive-3 PassengerCar-3
+add car-to-trainset locomotive-3 BaggageMailCar-13
+add car-to-trainset locomotive-3 BasicFreightCar-23
+add car-to-trainset locomotive-3 RestaurantCar-103
+add car-to-trainset locomotive-3 RefrigeratedCar-93
+add car-to-trainset locomotive-4 PassengerCar-4
+add car-to-trainset locomotive-4 BaggageMailCar-14
+add car-to-trainset locomotive-4 BasicFreightCar-24
+add car-to-trainset locomotive-4 RestaurantCar-104
+add car-to-trainset locomotive-4 RefrigeratedCar-94
+add car-to-trainset locomotive-5 PassengerCar-5
+add car-to-trainset locomotive-5 BaggageMailCar-15
+add car-to-trainset locomotive-5 BasicFreightCar-25
+add car-to-trainset locomotive-5 RestaurantCar-105
+add car-to-trainset locomotive-5 RefrigeratedCar-95
+add car-to-trainset locomotive-6 PassengerCar-6
+add car-to-trainset locomotive-6 BaggageMailCar-16
+add car-to-trainset locomotive-6 BasicFreightCar-26
+add car-to-trainset locomotive-6 RestaurantCar-106
+add car-to-trainset locomotive-6 RefrigeratedCar-96
+add car-to-trainset locomotive-7 PassengerCar-7
+add car-to-trainset locomotive-7 BaggageMailCar-17
+add car-to-trainset locomotive-7 BasicFreightCar-27
+add car-to-trainset locomotive-7 RestaurantCar-107
+add car-to-trainset locomotive-7 RefrigeratedCar-97
+add car-to-trainset locomotive-8 PassengerCar-8
+add car-to-trainset locomotive-8 BaggageMailCar-18
+add car-to-trainset locomotive-8 BasicFreightCar-28
+add car-to-trainset locomotive-8 RestaurantCar-108
+add car-to-trainset locomotive-8 RefrigeratedCar-98
+add car-to-trainset locomotive-9 PassengerCar-9
+add car-to-trainset locomotive-9 BaggageMailCar-19
+add car-to-trainset locomotive-9 BasicFreightCar-29
+add car-to-trainset locomotive-9 RestaurantCar-109
+add car-to-trainset locomotive-9 RefrigeratedCar-99
+add car-to-trainset locomotive-10 PassengerCar-10
+add car-to-trainset locomotive-10 BaggageMailCar-20
+add car-to-trainset locomotive-10 BasicFreightCar-30
+add car-to-trainset locomotive-10 RestaurantCar-110
+add car-to-trainset locomotive-10 RefrigeratedCar-100
+add car-to-trainset locomotive-11 HeavyFreightCar-51
+add car-to-trainset locomotive-11 ExplosiveMaterialsCar-31
+add car-to-trainset locomotive-11 LiquidMaterialsCar-61
+add car-to-trainset locomotive-11 ToxicMaterialsCar-111
+add car-to-trainset locomotive-11 LiquidToxicMaterialsCar-71
+add car-to-trainset locomotive-12 HeavyFreightCar-52
+add car-to-trainset locomotive-12 ExplosiveMaterialsCar-32
+add car-to-trainset locomotive-12 LiquidMaterialsCar-62
+add car-to-trainset locomotive-12 ToxicMaterialsCar-112
+add car-to-trainset locomotive-12 LiquidToxicMaterialsCar-72
+add car-to-trainset locomotive-13 HeavyFreightCar-53
+add car-to-trainset locomotive-13 ExplosiveMaterialsCar-33
+add car-to-trainset locomotive-13 LiquidMaterialsCar-63
+add car-to-trainset locomotive-13 ToxicMaterialsCar-113
+add car-to-trainset locomotive-13 LiquidToxicMaterialsCar-73
+add car-to-trainset locomotive-14 HeavyFreightCar-54
+add car-to-trainset locomotive-14 ExplosiveMaterialsCar-34
+add car-to-trainset locomotive-14 LiquidMaterialsCar-64
+add car-to-trainset locomotive-14 ToxicMaterialsCar-114
+add car-to-trainset locomotive-14 LiquidToxicMaterialsCar-74
+add car-to-trainset locomotive-15 HeavyFreightCar-55
+add car-to-trainset locomotive-15 ExplosiveMaterialsCar-35
+add car-to-trainset locomotive-15 LiquidMaterialsCar-65
+add car-to-trainset locomotive-15 ToxicMaterialsCar-115
+add car-to-trainset locomotive-15 LiquidToxicMaterialsCar-75
+add car-to-trainset locomotive-16 HeavyFreightCar-56
+add car-to-trainset locomotive-16 ExplosiveMaterialsCar-36
+add car-to-trainset locomotive-16 LiquidMaterialsCar-66
+add car-to-trainset locomotive-16 ToxicMaterialsCar-116
+add car-to-trainset locomotive-16 LiquidToxicMaterialsCar-76
+add car-to-trainset locomotive-17 HeavyFreightCar-57
+add car-to-trainset locomotive-17 ExplosiveMaterialsCar-37
+add car-to-trainset locomotive-17 LiquidMaterialsCar-67
+add car-to-trainset locomotive-17 ToxicMaterialsCar-117
+add car-to-trainset locomotive-17 LiquidToxicMaterialsCar-77
+add car-to-trainset locomotive-18 HeavyFreightCar-58
+add car-to-trainset locomotive-18 ExplosiveMaterialsCar-38
+add car-to-trainset locomotive-18 LiquidMaterialsCar-68
+add car-to-trainset locomotive-18 ToxicMaterialsCar-118
+add car-to-trainset locomotive-18 LiquidToxicMaterialsCar-78
+add car-to-trainset locomotive-19 HeavyFreightCar-59
+add car-to-trainset locomotive-19 ExplosiveMaterialsCar-39
+add car-to-trainset locomotive-19 LiquidMaterialsCar-69
+add car-to-trainset locomotive-19 ToxicMaterialsCar-119
+add car-to-trainset locomotive-19 LiquidToxicMaterialsCar-79
+add car-to-trainset locomotive-20 HeavyFreightCar-60
+add car-to-trainset locomotive-20 ExplosiveMaterialsCar-40
+add car-to-trainset locomotive-20 LiquidMaterialsCar-70
+add car-to-trainset locomotive-20 ToxicMaterialsCar-120
+add car-to-trainset locomotive-20 LiquidToxicMaterialsCar-80
+add car-to-trainset locomotive-20 GaseousMaterialsCar-41
+add car-to-trainset locomotive-20 GaseousMaterialsCar-42
+add car-to-trainset locomotive-20 GaseousMaterialsCar-43
+add car-to-trainset locomotive-20 GaseousMaterialsCar-44
+add car-to-trainset locomotive-20 GaseousMaterialsCar-45
+add car-to-trainset locomotive-21 GaseousMaterialsCar-46
+add car-to-trainset locomotive-21 GaseousMaterialsCar-47
+add car-to-trainset locomotive-21 GaseousMaterialsCar-48
+add car-to-trainset locomotive-21 GaseousMaterialsCar-49
+add car-to-trainset locomotive-21 GaseousMaterialsCar-50
+add car-to-trainset locomotive-21 GaseousMaterialsCar-46
+add car-to-trainset locomotive-21 GaseousMaterialsCar-47
+add car-to-trainset locomotive-21 GaseousMaterialsCar-48
+add car-to-trainset locomotive-21 GaseousMaterialsCar-49
+add car-to-trainset locomotive-21 GaseousMaterialsCar-50
+add car-to-trainset locomotive-22 PostOfficeCar-81
+add car-to-trainset locomotive-22 PostOfficeCar-82
+add car-to-trainset locomotive-22 PostOfficeCar-83
+add car-to-trainset locomotive-22 PostOfficeCar-84
+add car-to-trainset locomotive-22 PostOfficeCar-85
+add car-to-trainset locomotive-23 PostOfficeCar-86
+add car-to-trainset locomotive-23 PostOfficeCar-87
+add car-to-trainset locomotive-23 PostOfficeCar-88
+add car-to-trainset locomotive-23 PostOfficeCar-89
+add car-to-trainset locomotive-23 PostOfficeCar-90
 run-train locomotive-1 Station-17
 run-train locomotive-2 Station-7
 run-train locomotive-3 Station-23
@@ -5100,3 +5345,4 @@ run-train locomotive-24 Station-22
 run-train locomotive-25 Station-7
 log
 quit
+report locomotive-1 basic

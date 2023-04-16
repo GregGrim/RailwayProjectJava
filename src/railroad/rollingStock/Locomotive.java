@@ -251,15 +251,13 @@ public class Locomotive {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     } catch (RailroadHazard e) {
-                        System.err.println(e.getMessage());
+                        DebugMsg.errMsg(e.getMessage());
                         speed-=20;
                     }
-
                 }
             }
         }).start();
     }
-
     /**
      * function for locomotive that just spawned at home station (status: SPAWNED)
      * starts or trying to start its movement depending on queue

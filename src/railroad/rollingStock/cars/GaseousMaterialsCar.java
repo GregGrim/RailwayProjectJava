@@ -1,16 +1,14 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class GaseousMaterialsCar extends BasicFreightCar{
     enum Type {
         OXYGEN, NITROGEN, ARGON
     }
-    private Type gasType;
+    private final Type gasType;
     private double volume; // volume under atmospheric pressure
 
-    private int capacity;
-    private String securityInfo;
+    private final int capacity;
+    private final String securityInfo;
 
     public GaseousMaterialsCar(String name) {
         super(name == null?"GaseousMaterialsCar":name);

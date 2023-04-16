@@ -1,0 +1,17 @@
+add station
+add station
+add station
+add station
+add station
+add station
+add connection Station-1 Station-2
+add connection Station-2 Station-3
+add connection Station-3 Station-4
+add connection Station-4 Station-5
+add connection Station-5 Station-6
+add connection Station-6 Station-2
+add connection Station-3 Station-5
+add locomotive Station-1
+run-train locomotive-1 Station-5
+quit
+

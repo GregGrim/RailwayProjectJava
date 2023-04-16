@@ -1,9 +1,7 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class PostOfficeCar extends Car{
-    private String postCompany;
+    private final String postCompany;
     private int mailsToSend;
     public PostOfficeCar(String name) {
         super(name == null?"PostOfficeCar":name, "electricity, passengers", true);
@@ -12,11 +10,11 @@ public class PostOfficeCar extends Car{
     }
 
     public void sendMail(String receiverName) {
-        System.out.println("Mail to "+receiverName+"sent");
+        System.out.println("Mail to "+receiverName+" sent");
         mailsToSend--;
     }
     public void mailsLeft() {
-        System.out.println(mailsToSend+"left to be sent");
+        System.out.println(mailsToSend+" left to be sent");
     }
     public void getSummary() {
         System.out.println(getName());

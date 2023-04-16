@@ -22,7 +22,7 @@ public class Station {
 
     /**
      * overriden method equals that comparing stations by name
-     * @param station
+     * @param station to be compared
      * @return boolean
      */
     @Override

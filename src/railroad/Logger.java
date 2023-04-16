@@ -10,10 +10,9 @@ import static java.lang.Thread.sleep;
  * Class that implements reporting basic info about world each 5sec in AppState.txt
  */
 public class Logger implements Runnable{
-    private RailroadWorld world;
-    private FileOutputStream fil;
+    private final RailroadWorld world;
 
-    private String fileName;
+    private final String fileName;
     public Logger(RailroadWorld world,String fileName) {
         this.world = world;
         this.fileName=fileName;

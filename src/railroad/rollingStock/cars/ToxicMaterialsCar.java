@@ -1,14 +1,12 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class ToxicMaterialsCar extends HeavyFreightCar{
     private enum Type {
         POISON, RADIOACTIVE, DANGER_FOR_ENVIRONMENT
     }
-    private String chemicalName;
-    private Type matType;
-    private String securityInfo;
+    private final String chemicalName;
+    private final Type matType;
+    private final String securityInfo;
 
     public ToxicMaterialsCar(String name) {
         super(name == null?"ToxicMaterialsCar":name);
@@ -27,11 +25,6 @@ public class ToxicMaterialsCar extends HeavyFreightCar{
             chemicalName="Lead compounds";
         }
     }
-
-    public Type getMatType() {
-        return matType;
-    }
-
     @Override
     public void getSummary() {
         System.out.println(getName());

@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
  */
 public class RailroadWorld {
 
-    private Map<String, Car> cars = new HashMap<>();
-    private Map<String,Station> stations = new HashMap<>();
-    private Set<Connection> connections = new HashSet<>();
-    private Map<String, Locomotive> locomotives = new HashMap<>();
-    private Map<Locomotive, Trainset> trains = new HashMap<>();
+    private final Map<String, Car> cars = new HashMap<>();
+    private final Map<String,Station> stations = new HashMap<>();
+    private final Set<Connection> connections = new HashSet<>();
+    private final Map<String, Locomotive> locomotives = new HashMap<>();
+    private final Map<Locomotive, Trainset> trains = new HashMap<>();
 
     public Map<Locomotive, Trainset> getTrains() {
         return trains;
@@ -52,8 +52,8 @@ public class RailroadWorld {
      * @param parentCls parent object
      * @param object child object
      * @return boolean
-     * @param <Y>
-     * @param <T>
+     * @param <Y> parent class
+     * @param <T> child class
      */
     public <Y, T> boolean isChildOf(Class<Y> parentCls, T object){
         return parentCls.isAssignableFrom(object.getClass());
@@ -61,14 +61,14 @@ public class RailroadWorld {
 
     /**
      * generic function that deletes object from world even if threads are running
-     * @param object
+     * @param object object to be deleted
      * @param <T> any basic class of railroad world
      */
     public synchronized <T> void deleteObject(T object) {
             if (isChildOf(Car.class, object)){
                 Car car = (Car)object;
                 String carName = car.getName();
-                // if car is in trainset removes it from trainset and remove car
+                // if car is in trainset removes it from trainset and removes car
                 if(car.getTrainset()!=null) {
                     List<Car> remainedCars = car.getTrainset().getCars();
                     remainedCars.removeIf(c-> carName.equals(c.getName()));
@@ -221,6 +221,117 @@ public class RailroadWorld {
                 case "debug" :
                     DebugMsg.setDebugLevel(Integer.parseInt(scan.next()));
                     break;
+                case "sample" : {
+                    // simply shows functionalities that are not called in simulation
+                    Station station = new Station();
+                    Locomotive loco = new Locomotive(station, this);
+                    Trainset trainset = new Trainset(loco);
+
+
+                    RestaurantCar restaurantCar = new RestaurantCar(null);
+                    System.out.println(restaurantCar.getName()+" has been created");
+                    restaurantCar.getSummary();
+                    restaurantCar.addSeatingCapacity(15);
+                    System.out.println();
+
+                    BaggageMailCar baggageMailCar = new BaggageMailCar(null);
+                    System.out.println(baggageMailCar.getName()+" has been created");
+                    baggageMailCar.getSummary();
+                    baggageMailCar.unloadCargo(baggageMailCar.getLoadWeight()+100);
+                    baggageMailCar.loadCargo(1000);
+                    System.out.println();
+
+
+                    BasicFreightCar basicFreightCar = new BasicFreightCar(null);
+                    System.out.println(basicFreightCar.getName()+" has been created");
+                    basicFreightCar.getSummary();
+                    basicFreightCar.unloadCargo(basicFreightCar.getLoadWeight()+100);
+                    basicFreightCar.loadCargo(1000);
+                    System.out.println();
+
+                    ExplosiveMaterialsCar explosiveMaterialsCar = new ExplosiveMaterialsCar(null);
+                    System.out.println(explosiveMaterialsCar.getName()+" has been created");
+                    explosiveMaterialsCar.getSummary();
+                    explosiveMaterialsCar.unloadCargo(explosiveMaterialsCar.getLoadWeight()+100);
+                    explosiveMaterialsCar.loadCargo(1000);
+                    System.out.println(explosiveMaterialsCar.getName()+" is at risk of exploding?:"
+                            +explosiveMaterialsCar.isAtRiskOfExploding());
+                    System.out.println();
+
+                    GaseousMaterialsCar gaseousMaterialsCar = new GaseousMaterialsCar(null);
+                    System.out.println(gaseousMaterialsCar.getName()+" has been created");
+                    gaseousMaterialsCar.getSummary();
+                    gaseousMaterialsCar.unloadCargo(explosiveMaterialsCar.getLoadWeight()+100);
+                    gaseousMaterialsCar.loadCargo(1000);
+                    System.out.println();
+
+                    HeavyFreightCar heavyFreightCar = new HeavyFreightCar(null);
+                    System.out.println(heavyFreightCar.getName()+" has been created");
+                    heavyFreightCar.getSummary();
+                    heavyFreightCar.unloadCargo(heavyFreightCar.getLoadWeight()+100);
+                    heavyFreightCar.loadCargo(1000);
+                    System.out.println();
+
+                    LiquidMaterialsCar liquidMaterialsCar = new LiquidMaterialsCar(null);
+                    System.out.println(liquidMaterialsCar.getName()+" has been created");
+                    liquidMaterialsCar.getSummary();
+                    liquidMaterialsCar.unloadCargo(liquidMaterialsCar.getLoadWeight()+100);
+                    liquidMaterialsCar.loadCargo(1000);
+                    System.out.println("Capacity left: "+liquidMaterialsCar.capLeft());
+                    System.out.println();
+
+                    LiquidToxicMaterialsCar liquidToxicMaterialsCar = new LiquidToxicMaterialsCar(null);
+                    System.out.println(liquidToxicMaterialsCar.getName()+" has been created");
+                    liquidToxicMaterialsCar.getSummary();
+                    liquidToxicMaterialsCar.unloadCargo(liquidToxicMaterialsCar.getLoadWeight()+100);
+                    liquidToxicMaterialsCar.loadCargo(1000);
+                    System.out.println("Capacity left: "+liquidToxicMaterialsCar.capLeft());
+                    System.out.println();
+
+                    PassengerCar passengerCar = new PassengerCar(null);
+                    System.out.println(passengerCar.getName()+" has been created");
+                    passengerCar.getSummary();
+                    passengerCar.occupySeats(100);
+                    passengerCar.occupySeats(5);
+                    passengerCar.addMoreSeats(10);
+                    passengerCar.hasFreeSeat();
+                    System.out.println();
+
+                    PostOfficeCar postOfficeCar = new PostOfficeCar(null);
+                    System.out.println(postOfficeCar.getName()+" has been created");
+                    postOfficeCar.getSummary();
+                    postOfficeCar.mailsLeft();
+                    postOfficeCar.sendMail("John Nelson");
+                    System.out.println();
+
+                    RefrigeratedCar refrigeratedCar = new RefrigeratedCar(null);
+                    System.out.println(refrigeratedCar.getName()+" has been created");
+                    refrigeratedCar.getSummary();
+                    refrigeratedCar.unloadCargo(refrigeratedCar.getLoadWeight()+100);
+                    refrigeratedCar.loadCargo(1000);
+                    System.out.println();
+
+                    ToxicMaterialsCar toxicMaterialsCar = new ToxicMaterialsCar(null);
+                    System.out.println(toxicMaterialsCar.getName()+" has been created");
+                    toxicMaterialsCar.getSummary();
+                    toxicMaterialsCar.unloadCargo(toxicMaterialsCar.getLoadWeight()+100);
+                    toxicMaterialsCar.loadCargo(1000);
+                    System.out.println();
+
+
+                    trainset.detachCar(); // should show that there is no cars in train
+                    try {
+                        trainset.attachCar(restaurantCar);
+                        trainset.attachCar(explosiveMaterialsCar);
+                        trainset.attachCar(passengerCar);
+                        trainset.attachCar(postOfficeCar);
+                        trainset.attachCar(liquidMaterialsCar);
+                    } catch (CannotAttachException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    System.out.println("Cars: "+ trainset.getCars());
+                    break;
+                }
                 case "report" :
                     Locomotive loc = locomotives.get(scan.next());
                     String option = scan.next();
@@ -301,7 +412,8 @@ public class RailroadWorld {
                         case "car-to-trainset" : {
                             try {
                                 Trainset train = trains.get(locomotives.get(scan.next()));
-                                train.attachCar(cars.get(scan.next()));
+                                Car car = cars.get(scan.next());
+                                train.attachCar(car);
                             } catch (CannotAttachException e) {
                                 System.err.println(e.getMessage());
                             }
@@ -312,6 +424,10 @@ public class RailroadWorld {
                     break;
                 case "remove" : {
                     switch (scan.next()) {
+                        case "car-from-trainset"-> {
+                            Trainset train = trains.get(locomotives.get(scan.next()));
+                            train.detachCar();
+                        }
                         case "car" -> {
                             String carName = scan.next();
                             Car car = cars.get(carName);

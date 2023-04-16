@@ -1,9 +1,8 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
 
 public class BasicFreightCar extends Car{
-    private String shipper;
+    private final String shipper;
 
     public BasicFreightCar(String name) {
         super(name == null?"BasicFreightCar":name, "-", false);

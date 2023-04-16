@@ -1,10 +1,8 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class ExplosiveMaterialsCar extends HeavyFreightCar{
-    private int capacity;
-    private String securityInfo;
+    private final int capacity;
+    private final String securityInfo;
     public ExplosiveMaterialsCar(String name) {
         super(name == null?"ExplosiveMaterialsCar":name);
         capacity=loadWeight+(int)(Math.random()*500);
@@ -12,7 +10,7 @@ public class ExplosiveMaterialsCar extends HeavyFreightCar{
     }
     public boolean isAtRiskOfExploding() {
         final double EXPLOSIVE_RISK_THRESHOLD = 90.0;
-        double loadPercentage = loadWeight / capacity * 100.0;
+        double loadPercentage = (double) (loadWeight/capacity) * 100.0;
         return loadPercentage >= EXPLOSIVE_RISK_THRESHOLD;
     }
 

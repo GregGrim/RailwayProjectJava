@@ -1,16 +1,14 @@
 package railroad.rollingStock.cars;
 
-import railroad.DebugMsg;
-
 public class LiquidToxicMaterialsCar extends ToxicMaterialsCar implements LiquidMaterials{
     private enum Type {
         ETHER, MERCURY, ACID
     }
     private double volume;
-    private int capacity;
-    private Type liqType;
-    private String chemicalName;
-    private String securityInfo;
+    private final int capacity;
+    private final Type liqType;
+    private final String chemicalName;
+    private final String securityInfo;
     public LiquidToxicMaterialsCar(String name) {
         super(name == null?"LiquidToxicMaterialsCar":name);
         securityInfo=super.getSecurityInfo()+", liquids";
@@ -70,7 +68,7 @@ public class LiquidToxicMaterialsCar extends ToxicMaterialsCar implements Liquid
         System.out.println("loadWeight= "+loadWeight+"\nshipper: "+super.getShipper());
         System.out.println("securityInfo: "+securityInfo);
         System.out.println("electricalGreedNeed: "+(isElectricalGridNeed()?"Yes":"No"));
-        System.out.println("liquid Type: "+liqType+ "\nchemicalName= "+chemicalName);
+        System.out.println("volume= "+volume+"\nliquid Type: "+liqType+ "\nchemicalName= "+chemicalName);
 
     }
 }
