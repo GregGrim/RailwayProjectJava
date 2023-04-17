@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 
@@ -24,13 +25,13 @@ import java.util.stream.Collectors;
  *
  */
 public class RailroadWorld {
-
     private final Map<String, Car> cars = new HashMap<>();
     private final Map<String,Station> stations = new HashMap<>();
     private final Set<Connection> connections = new HashSet<>();
     private final Map<String, Locomotive> locomotives = new HashMap<>();
     private final Map<Locomotive, Trainset> trains = new HashMap<>();
-
+    private final Semaphore semaphoreDelete = new Semaphore(1);
+    private final Semaphore semaphoreCompute = new Semaphore(1000);
     public Map<Locomotive, Trainset> getTrains() {
         return trains;
     }
@@ -80,27 +81,30 @@ public class RailroadWorld {
                 String locomotiveName = locomotive.getName();
                 //stops locomotive threads
                 locomotive.stop();
+                locomotive.getCurrentConnection().getQueue().remove(locomotive);
                 //removes all cars from train and deletes loco and train
-                locomotive.getTrainset().getCars().forEach(this::deleteObject);
+                Collection<Car> cc = List.copyOf(locomotive.getTrainset().getCars());
+                cc.forEach(this::deleteObject);
                 trains.remove(locomotive);
                 locomotives.remove(locomotiveName);
             } else if (isChildOf(Connection.class, object)) {
-                Connection connection = (Connection)object;
-                // removing connection from available
-                connections.remove(connection);
-                // getting loco in connection
-                Locomotive runningLoco = connection.getQueue().peek();
-                // clearing queue
-                connection.getQueue().clear();
-                if (runningLoco != null){
-                    deleteObject(runningLoco);
-                } else {
-                    System.out.println("No locomotive found in this connection");
-                }
-                // after arriving to the next station each locomotive will recalculate next route without this station
-                locomotives.values().stream()
-                        .filter(locomotive -> locomotive.hasConnectionInRoute(connection))
-                        .forEach(locomotive -> locomotive.setShouldRecalc(true));
+                    Connection connection = (Connection) object;
+                    // removing connection from available
+                    connections.remove(connection);
+                    // getting loco in connection
+                    Locomotive runningLoco = connection.getQueue().peek();
+                    // clearing queue
+                    connection.getQueue().clear();
+                    if (runningLoco != null) {
+                        deleteObject(runningLoco);
+                    } else {
+                        System.out.println("No locomotive found in this connection");
+                    }
+                    // after arriving to the next station each locomotive will recalculate next route without this station
+                    locomotives.values().stream()
+                            .filter(locomotive -> locomotive.hasConnectionInRoute(connection))
+                            .forEach(locomotive -> locomotive.setShouldRecalc(true));
+
             } else if (isChildOf(Station.class, object)) {
                 Station station = (Station) object;
                 //removing locos from this station and locos that have this station as home||destination
@@ -187,8 +191,19 @@ public class RailroadWorld {
      * @param finishStation destination Station
      * @return route or null if it doesn't exist
      */
-    public List<Station> computeRoute(Station startStation, Station finishStation)  {
-        return findPathTo(new ArrayList<>(), startStation,finishStation);
+    public List<Station> computeRoute(Station startStation, Station finishStation) {
+        List<Station> list = null;
+        try {
+            while (semaphoreDelete.availablePermits() == 0) {
+                Thread.sleep(10);
+            }
+            semaphoreCompute.acquire();
+            list = findPathTo(new ArrayList<>(), startStation, finishStation);
+            semaphoreCompute.release();
+        } catch (InterruptedException e) {
+                e.printStackTrace();
+        }
+        return list;
     }
 
     /**
@@ -226,7 +241,6 @@ public class RailroadWorld {
                     Station station = new Station();
                     Locomotive loco = new Locomotive(station, this);
                     Trainset trainset = new Trainset(loco);
-
 
                     RestaurantCar restaurantCar = new RestaurantCar(null);
                     System.out.println(restaurantCar.getName()+" has been created");
@@ -423,44 +437,54 @@ public class RailroadWorld {
                     }
                     break;
                 case "remove" : {
-                    switch (scan.next()) {
-                        case "car-from-trainset"-> {
-                            Trainset train = trains.get(locomotives.get(scan.next()));
-                            train.detachCar();
+                    try {
+                        while (semaphoreCompute.availablePermits()  < 1000) {
+                            Thread.sleep(10);
                         }
-                        case "car" -> {
-                            String carName = scan.next();
-                            Car car = cars.get(carName);
-                            if (car != null) {
-                                deleteObject(car);
-                                System.out.println(car.getName() + " deleted");
-                            } else System.err.println("No such car in Railroad World");
+                        semaphoreDelete.acquire();
+                        switch (scan.next()) {
+                            case "car-from-trainset" -> {
+                                Trainset train = trains.get(locomotives.get(scan.next()));
+                                train.detachCar();
+                            }
+                            case "car" -> {
+                                String carName = scan.next();
+                                Car car = cars.get(carName);
+                                if (car != null) {
+                                    deleteObject(car);
+                                    System.out.println(car.getName() + " deleted");
+                                } else System.err.println("No such car in Railroad World");
+                            }
+                            case "locomotive" -> {
+                                String locomotiveName = scan.next();
+                                Locomotive locomotive = locomotives.get(locomotiveName);
+                                if (locomotive != null) {
+                                    deleteObject(locomotive);
+                                    System.out.println(locomotive.getName() + " deleted");
+                                } else System.err.println("No such locomotive in Railroad World");
+                            }
+                            case "connection" -> {
+                                Station stationA = stations.get(scan.next());
+                                Station stationB = stations.get(scan.next());
+                                Connection connection = new Connection(stationA, stationB);
+                                List<Connection> matchingConnections = connections.stream()
+                                        .filter(c -> c.equals(connection)).toList();
+                                if (matchingConnections.size() > 0) {
+                                    Connection matchingConnection = matchingConnections.get(0);
+                                    deleteObject(matchingConnection);
+                                } else System.err.println(connection + "does not exist!");
+                            }
+                            case "station" -> {
+                                Station station = stations.get(scan.next());
+                                if (station != null) {
+                                    deleteObject(station);
+                                    System.out.println(station.getName() + " deleted");
+                                } else System.err.println("No such station in Railroad World");
+                            }
                         }
-                        case "locomotive" -> {
-                            String locomotiveName = scan.next();
-                            Locomotive locomotive = locomotives.get(locomotiveName);
-                            if (locomotive != null) {
-                                deleteObject(locomotive);
-                                System.out.println(locomotive.getName() + " deleted");
-                            } else System.err.println("No such locomotive in Railroad World");
-                        }
-                        case "connection" -> {
-                            Station stationA = stations.get(scan.next());
-                            Station stationB = stations.get(scan.next());
-                            Connection connection = new Connection(stationA, stationB);
-                            List<Connection> matchingConnections = connections.stream().filter(c->c.equals(connection)).toList();
-                            if(matchingConnections.size()>0) {
-                                Connection  matchingConnection = matchingConnections.get(0);
-                                deleteObject(matchingConnection);
-                            } else System.err.println(connection+"does not exist!");
-                        }
-                        case "station" -> {
-                            Station station = stations.get(scan.next());
-                            if(station!=null) {
-                                deleteObject(station);
-                                System.out.println(station.getName()+" deleted");
-                            } else System.err.println("No such station in Railroad World");
-                        }
+                        semaphoreDelete.release();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                     break;
                 }

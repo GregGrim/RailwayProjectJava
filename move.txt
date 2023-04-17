@@ -13,5 +13,9 @@ add connection Station-6 Station-2
 add connection Station-3 Station-5
 add locomotive Station-1
 run-train locomotive-1 Station-5
+add locomotive Station-1
+run-train locomotive-2 Station-5
 quit
+remove station Station-6
+report locomotive-1 basic
 

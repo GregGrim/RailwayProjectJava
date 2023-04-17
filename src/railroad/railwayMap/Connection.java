@@ -40,8 +40,10 @@ public class Connection {
      * @throws RuntimeException if queue is empty
      */
     public void removeFromQueue(Locomotive locomotive) throws RuntimeException{
-        if(!locomotive.equals(queue.poll())) {
-            throw new RuntimeException("error!");
+        if(locomotive.isRunning()) {
+            if (!locomotive.equals(queue.poll())) {
+                throw new RuntimeException("error! " + locomotive.isRunning());
+            }
         }
     }
 

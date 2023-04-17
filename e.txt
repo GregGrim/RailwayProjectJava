@@ -5345,4 +5345,4 @@ run-train locomotive-24 Station-22
 run-train locomotive-25 Station-7
 log
 quit
-report locomotive-1 basic
+report locomotive-1 routeDistancePassed

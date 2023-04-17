@@ -5,6 +5,8 @@ import railroad.exceptions.RailroadHazard;
 import railroad.railwayMap.Connection;
 import railroad.railwayMap.Station;
 import railroad.RailroadWorld;
+
+import java.util.ArrayList;
 import java.util.List;
 import static java.lang.Thread.sleep;
 
@@ -31,6 +33,7 @@ public class Locomotive {
     private int distance;
     private Connection currentConnection;
     private boolean shouldRecalc;
+    private final List<Thread> threads = new ArrayList<>();
     public Locomotive (Station _homeStation,RailroadWorld _world) {
         world=_world;
         name="locomotive-"+(counter++);
@@ -158,9 +161,16 @@ public class Locomotive {
      * function to stop train movement and kill threads
      */
     public void stop() {
-        if(route!=null) currentConnection.getQueue().remove(this);
-        speed=0;
+        if (route != null) currentConnection.getQueue().remove(this);
+        speed = 0;
         running = false;
+        for (Thread t : threads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public boolean isRunning() {
         return running;
@@ -174,8 +184,8 @@ public class Locomotive {
         setEndStation(destinationStation);
         setDestinationStation(destinationStation);
         setRunning(true);
-
-        new Thread(() -> { // run thread to implement spawned logic
+        ThreadGroup threadGroup = new ThreadGroup(name);
+        threads.add(new Thread(threadGroup,() -> { // run thread to implement spawned logic
             while(isRunning()) {
                 try {
                     sleep(10);
@@ -184,11 +194,12 @@ public class Locomotive {
                 }
                 if (status == Status.SPAWNED) {
                     mSpawned();
+                    break;
                 }
             }
-        }).start();
+        }));
 
-        new Thread(() -> { // run thread to implement arrived logic
+        threads.add(new Thread(threadGroup,() -> { // run thread to implement arrived logic
             while(isRunning()) {
                 try {
                     sleep(10);
@@ -204,9 +215,9 @@ public class Locomotive {
                     mArrived();
                 }
             }
-        }).start();
+        }));
 
-        new Thread(() -> { // run thread to implement starting logic
+        threads.add(new Thread(threadGroup,() -> { // run thread to implement starting logic
             while(isRunning()) {
                 try {
                     sleep(10);
@@ -217,9 +228,9 @@ public class Locomotive {
                     mStarting();
                 }
             }
-        }).start();
+        }));
 
-        new Thread(() -> { // run thread to implement preparing back journey logic
+        threads.add(new Thread(threadGroup,() -> { // run thread to implement preparing back journey logic
             while(isRunning()) {
                 try {
                     sleep(10);
@@ -235,9 +246,9 @@ public class Locomotive {
                     mPreparingBack();
                 }
             }
-        }).start();
+        }));
 
-        new Thread(() -> { // run thread to implement moving logic
+        threads.add(new Thread(threadGroup,() -> { // run thread to implement moving logic
             while(isRunning()) {
                 try {
                     sleep(10);
@@ -256,7 +267,10 @@ public class Locomotive {
                     }
                 }
             }
-        }).start();
+        }));
+        for (Thread t:threads) {
+            t.start();
+        }
     }
     /**
      * function for locomotive that just spawned at home station (status: SPAWNED)
