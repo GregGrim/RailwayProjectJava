@@ -11,17 +11,19 @@ import static java.lang.Thread.sleep;
  */
 public class Logger implements Runnable{
     private final RailroadWorld world;
-
+    private boolean isLogging;
     private final String fileName;
     public Logger(RailroadWorld world,String fileName) {
         this.world = world;
         this.fileName=fileName;
+        this.isLogging=true;
         new Thread(this).start();
+
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (isLogging) {
             try {
                 sleep(1000);
                 FileOutputStream fil = new FileOutputStream(fileName,false);

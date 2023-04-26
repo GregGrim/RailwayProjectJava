@@ -65,7 +65,7 @@ public class RailroadWorld {
      * @param object object to be deleted
      * @param <T> any basic class of railroad world
      */
-    public synchronized <T> void deleteObject(T object) {
+    public <T> void deleteObject(T object) {
             if (isChildOf(Car.class, object)){
                 Car car = (Car)object;
                 String carName = car.getName();
@@ -184,6 +184,49 @@ public class RailroadWorld {
         }
         return null;
     }
+
+    private List<Station> findShortestPathTo (List<Station> r, Station s, Station f) { // not optimized
+        List<Station> route = new ArrayList<>(r);
+        route.add(s);
+        List<List<Station>> listRoutes = new ArrayList<>();
+
+        /*
+        generates set of connections from given station
+        */
+        Set<Connection> filteredConnections = connections.stream().filter(p -> p.isConnected(s))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        for (Connection c: filteredConnections) {
+            Station dStation = c.connectTo(s);
+            if(dStation.equals(f)) {
+                List<Station> route2 = new ArrayList<>(route);
+                route2.add(dStation);
+                listRoutes.add(route2);
+
+
+            } else if (!route.contains(dStation)) { // going back in route and searching for another path
+                List<Station> route2 = findShortestPathTo(route,dStation, f);
+                if(route2!=null) listRoutes.add(route2);
+
+            }
+        }
+        List<List<Station>> sortedRoutes = listRoutes.stream().sorted((ro1, ro2)->{
+            int dist1 = 0;
+            for (int i = 0; i < ro1.size()-1; i++) {
+                dist1+=getConnection(ro1.get(i), ro1.get(i+1)).getDistance();
+            }
+            int dist2 = 0;
+            for (int i = 0; i < ro2.size()-1; i++) {
+                dist2+=getConnection(ro2.get(i), ro2.get(i+1)).getDistance();
+            }
+            if(dist1>dist2) return 1;
+            else if (dist1==dist2) {
+                return 0;
+            } else return -1;
+        }).toList();
+        return sortedRoutes.isEmpty()?null:sortedRoutes.get(0);
+    }
+
 
     /**
      * Wrapper function for finding path between Stations

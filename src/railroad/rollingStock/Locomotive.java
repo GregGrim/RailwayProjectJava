@@ -6,8 +6,10 @@ import railroad.railwayMap.Connection;
 import railroad.railwayMap.Station;
 import railroad.RailroadWorld;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static java.lang.Thread.sleep;
 
 /**
@@ -28,12 +30,12 @@ public class Locomotive {
     private int routeDistancePassed;
     private static int counter= 1;
     private final RailroadWorld world;
-    private boolean running;
+    private volatile boolean running;
     private double speed;
     private int distance;
     private Connection currentConnection;
     private boolean shouldRecalc;
-    private final List<Thread> threads = new ArrayList<>();
+    private final Map<Status, Thread> threads = new HashMap<>();
     public Locomotive (Station _homeStation,RailroadWorld _world) {
         world=_world;
         name="locomotive-"+(counter++);
@@ -118,6 +120,9 @@ public class Locomotive {
     public void setRunning(boolean running) {
         this.running = running;
     }
+    private void setStatus(Status status) {
+        this.status=status;
+    }
 
     /**
      * checks if it`s time for loco to start from station(1st in queue)
@@ -164,7 +169,7 @@ public class Locomotive {
         if (route != null) currentConnection.getQueue().remove(this);
         speed = 0;
         running = false;
-        for (Thread t : threads) {
+        for (Thread t : threads.values()) {
             try {
                 t.join();
             } catch (InterruptedException e) {
@@ -185,44 +190,36 @@ public class Locomotive {
         setDestinationStation(destinationStation);
         setRunning(true);
         ThreadGroup threadGroup = new ThreadGroup(name);
-        threads.add(new Thread(threadGroup,() -> { // run thread to implement spawned logic
-            while(isRunning()) {
-                try {
-                    sleep(10);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                if (status == Status.SPAWNED) {
+        threads.put(Status.SPAWNED, new Thread(threadGroup,() -> { // run thread to implement spawned logic
+            while(isRunning()&&status==Status.SPAWNED) {
                     mSpawned();
-                    break;
-                }
             }
         }));
 
-        threads.add(new Thread(threadGroup,() -> { // run thread to implement arrived logic
+        threads.put(Status.ARRIVED, new Thread(threadGroup,() -> { // run thread to implement arrived logic
             while(isRunning()) {
                 try {
                     sleep(10);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
                 if (status == Status.ARRIVED) {
                     try {
                         sleep(2000);
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
                     mArrived();
                 }
             }
         }));
 
-        threads.add(new Thread(threadGroup,() -> { // run thread to implement starting logic
+        threads.put(Status.STARTING, new Thread(threadGroup,() -> { // run thread to implement starting logic
             while(isRunning()) {
                 try {
                     sleep(10);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
                 if (status == Status.STARTING) {
                     mStarting();
@@ -230,37 +227,37 @@ public class Locomotive {
             }
         }));
 
-        threads.add(new Thread(threadGroup,() -> { // run thread to implement preparing back journey logic
+        threads.put(Status.PREPARING_BACK, new Thread(threadGroup,() -> { // run thread to implement preparing back journey logic
             while(isRunning()) {
                 try {
                     sleep(10);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
                 if (status == Status.PREPARING_BACK) {
                     try {
                         sleep(30000);
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
                     mPreparingBack();
                 }
             }
         }));
 
-        threads.add(new Thread(threadGroup,() -> { // run thread to implement moving logic
+        threads.put(Status.MOVING, new Thread(threadGroup,() -> { // run thread to implement moving logic
             while(isRunning()) {
                 try {
                     sleep(10);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
                 if (status == Status.MOVING) {
                     try {
                         sleep(1000);
                         mMoving();
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                       e.printStackTrace();
                     } catch (RailroadHazard e) {
                         DebugMsg.errMsg(e.getMessage());
                         speed-=20;
@@ -268,7 +265,7 @@ public class Locomotive {
                 }
             }
         }));
-        for (Thread t:threads) {
+        for (Thread t:threads.values()) {
             t.start();
         }
     }
@@ -282,7 +279,7 @@ public class Locomotive {
          DebugMsg.msg(this +" "+ status + " at " + route.get(0));
          start();
          routeDistance=calculateRouteDistance();
-         status = Status.STARTING;
+         setStatus(Status.STARTING);
     }
 
     /**
@@ -298,9 +295,9 @@ public class Locomotive {
         speed = 0;
         route.remove(0);
         if (route.size() > 1) {
-            status = Status.STARTING;
+            setStatus(Status.STARTING);
         } else {
-            status= Status.PREPARING_BACK;
+            setStatus(Status.PREPARING_BACK);
             DebugMsg.msg(this+" "+status+" from "+route.get(0)+" in opposite direction");
         }
     }
@@ -321,7 +318,7 @@ public class Locomotive {
         if(onTheWay()) {
             DebugMsg.msg(this+" "+status+" from "+route.get(0)+" to "+
                     route.get(1)+" Queue: "+currentConnection.getQueue());
-            status = Status.MOVING;
+            setStatus(Status.MOVING);
         }
     }
 
@@ -342,7 +339,7 @@ public class Locomotive {
             route = world.computeRoute(homeStation, endStation);
         }
         routeDistance=calculateRouteDistance();
-        status=Status.STARTING;
+        setStatus(Status.STARTING);
     }
 
     /**
@@ -363,7 +360,7 @@ public class Locomotive {
                 this.speed *= 1.03;
             else this.speed /= 1.03;
             if (speed > 200) throw new RailroadHazard(this);
-        } else status = Status.ARRIVED;
+        } else setStatus(Status.ARRIVED);
     }
 }
 
